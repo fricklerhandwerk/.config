@@ -1,10 +1,28 @@
 { config, pkgs, ... }:
+  let home-manager = pkgs.home-manager.overrideAttrs ( oldAttrs:{
+    src = pkgs.fetchFromGitHub {
+      owner = "fricklerhandwerk";
+      repo = "home-manager";
+      rev = "aeebcdf04a5041834c6b07ccd917b446f9bac32a";
+      sha256 = "0nbknnc1jbdicq5pangxvzf8gqb90h2kd9yj610j0sbxdwccn5d3c";
+    };
+    buildCommand = ''
+      install -v -D -m755 ${home-manager.src}/home-manager/home-manager $out/bin/home-manager
+      substituteInPlace $out/bin/home-manager \
+        --subst-var-by bash "${pkgs.bash}" \
+        --subst-var-by coreutils "${pkgs.coreutils}" \
+        --subst-var-by findutils "${pkgs.findutils}" \
+        --subst-var-by gnused "${pkgs.gnused}" \
+        --subst-var-by less "${pkgs.less}" \
+        --subst-var-by nix "${pkgs.nix}" \
+        --subst-var-by HOME_MANAGER_PATH '${home-manager.src}'
+     '';
+   }); in
 {
   imports =
     [
       ./hardware-configuration.nix
-      "${builtins.fetchTarball https://github.com/rycee/home-manager/archive/release-18.09.tar.gz}/nixos"
-    ],
+    ];
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
@@ -18,23 +36,16 @@
       home-manager
     ];
 
-    system.activationScripts = {
-      # this script will delete itself and the script to clone `.config`,
-      # because it is needed only on the first build.
-      firstInstall = {
-        text = ''
-          ${pkgs.gnused}/bin/sed '/firstInstall = /{:1;N;/};$/!b1};//d' -i /etc/nixos/configuration.nix
-          ${pkgs.gnused}/bin/sed '/home = /{:1;N;/};$/!b1};//d' -i /etc/nixos/configuration.nix
-        '';
-        deps = [];
-
-      };
-    };
+    # TODO: run this only for specific user
     system.userActivationScripts = {
       home = {
         text = ''
-          mkdir -p ~/.config/nixpkgs
-          ${pkgs.git}/bin/git clone git://github.com/fricklerhandwerk/.config.git
+          # assuming absence of `~/.config` is equivalent to a fresh install,
+          # fetch user config from remote repository
+          if [[ ! -d ~/.config ]]; then
+            ${pkgs.git}/bin/git clone git://github.com/fricklerhandwerk/.config.git
+            ${home-manager}/bin/home-manager switch
+          fi
         '';
         deps = [];
 
