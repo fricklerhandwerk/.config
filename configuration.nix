@@ -3,8 +3,8 @@
     src = pkgs.fetchFromGitHub {
       owner = "fricklerhandwerk";
       repo = "home-manager";
-      rev = "aeebcdf04a5041834c6b07ccd917b446f9bac32a";
-      sha256 = "0nbknnc1jbdicq5pangxvzf8gqb90h2kd9yj610j0sbxdwccn5d3c";
+      rev = "643dff586d3e9d676571f712688563a0e5f14f97";
+      sha256 = "0jxfw1hgfiiir308pw83wsgs33wijhyj0dwm8bxviqlyrkwwzs97";
     };
     buildCommand = ''
       install -v -D -m755 ${home-manager.src}/home-manager/home-manager $out/bin/home-manager
