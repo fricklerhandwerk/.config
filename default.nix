@@ -1,15 +1,14 @@
 path: {config, lib, pkgs, ...}:
+# bring actual configuration into scope
+with import nixpkgs/home.nix {inherit config lib pkgs;};
 {
-  imports = [
-    # bring actual configuration into scope
-    import nixpkgs/home.nix {inherit config lib pkgs;}
-  ];
   config.systemd.user.services.home-config = {
     Unit = {
       Description = "make sure home-manager configuration is in $HOME on login";
+      After = [ "multi-user.target" ];
     };
     Install = {
-      WantedBy = [ "multi-user.target" ];
+      WantedBy = [ "default.target" ];
     };
     Service = {
       Type = "oneshot";
@@ -17,7 +16,7 @@ path: {config, lib, pkgs, ...}:
         ''
           #!${pkgs.stdenv.shell}
           ${pkgs.rsync}/bin/rsync -a ${path}/ $HOME/.config
-          echo "foo" > $HOME/test
+          chmod -R u+wx $HOME/.config
         '';
       in "${script}/bin/copy-config";
     };

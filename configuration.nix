@@ -31,15 +31,9 @@ in
     uid = 1000;
     extraGroups = [ "wheel" "networkmanager" ];
   };
-  # this creates or activates the most recent profile on login, which means
-  # that later changes to the profile by the will not be overridden by a system
-  # rebuild
   home-manager.users.vg =
-    let config = fetchGit {
-      url = "https://github.com/fricklerhandwerk/.config";
-      ref = "master";
-    };
-    in (import config) "${config}";
+    let config = fetchTarball https://github.com/fricklerhandwerk/.config/archive/master.tar.gz;
+    in import config "${config}";
 
   system.stateVersion = "18.09";
 }
