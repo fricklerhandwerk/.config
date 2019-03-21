@@ -20,6 +20,16 @@ let
                 type = types.str;
                 description = "git repository with user configuration";
               };
+              path = mkOption {
+                type = types.str;
+                default = ".config";
+                description = "clone path for configuration repository, relative to user's $HOME";
+              };
+              file = mkOption {
+                type = types.str;
+                default = "nixpkgs/home.nix";
+                description = "location of home-manager configuration file within configuration repository";
+              };
             };
           });
         };
@@ -38,10 +48,12 @@ let
               ExecStart = pkgs.writeScript "home-config-${username}"
               ''
                 #! ${pkgs.stdenv.shell} -el
-                if [[ ! -d $HOME/.config ]]; then
+                if [[ ! -d $HOME/${cfg.path}} ]]; then
                   cd $HOME
-                  ${pkgs.git}/bin/git clone ${cfg.repo}
-                  ${home-manager.home-manager}/bin/home-manager switch
+                  ${pkgs.git}/bin/git clone ${cfg.repo} ${cfg.path}
+                  ${home-manager.home-manager}/bin/home-manager \
+                  -f ${cfg.path}/${cfg.file} \
+                  switch
                 fi
               '';
             };
