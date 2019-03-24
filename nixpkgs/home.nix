@@ -1,7 +1,10 @@
 { pkgs, ... }:
 {
-  home.packages = [
-    pkgs.htop
-    pkgs.git
+  home.packages = with pkgs; [
+    qutebrowser
   ];
+  xsession = {
+    enable = true;
+    windowManager.xmonad.enable = true;
+  };
 }
