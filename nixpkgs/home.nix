@@ -37,14 +37,14 @@ let secrets = "$HOME/.config/secrets"; in
         exit 1
       fi
       cp -R $mnt/secrets ${secrets}
-      chmod -R u=rwx,g=,o= ${secrets}
+      chmod -RT u=rwx,g=,o= ${secrets}
       fi
   '';
   home.activation.sshKeys = dagEntryAfter ["copySecrets"] ''
     install -D -m600 ${secrets}/ssh/id_rsa_github $HOME/.ssh/id_rsa_github
   '';
   home.activation.passwords = dagEntryAfter ["copySecrets"] ''
-    cp -R ${secrets}/password-store $HOME/.password-store
+    cp -RT ${secrets}/password-store $HOME/.password-store
     chmod -R u=rwx,g=,o= $HOME/.password-store
   '';
 }
