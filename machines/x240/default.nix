@@ -18,17 +18,20 @@
     enable = true;
     displayManager.lightdm.enable = true;
   };
-
   # enable backlight keys
   programs.light.enable = true;
   services.actkbd = {
     enable = true;
-    bindings = let step = "10"; in [
-      { keys = [224]; events = ["key"]; # down
-        command ="/run/wrappers/bin/light -U ${step}";
-      }
-      { keys = [225]; events = ["key"]; # up
-        command ="/run/wrappers/bin/light -A ${step}";
+    bindings = let step = "85"; light = "/run/wrappers/bin/light -r"; in [
+      { keys = [224]; events = ["key"]; command = "${light} -U ${step}"; }
+      { keys = [225]; events = ["key"];
+        command = "${pkgs.writeScript "brightness-up" ''
+          if [[ $(${light} -G) -eq "0" ]]; then
+            ${light} -S 1
+          else
+            ${light} -A ${step}
+          fi
+        ''}";
       }
     ];
   };
