@@ -35,4 +35,5 @@
       }
     ];
   };
+   hardware.pulseaudio.enable = true;
 }
