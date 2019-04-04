@@ -21,8 +21,9 @@ let secrets = "$HOME/.config/secrets"; in
         main = xmonad $ defaultConfig
           { terminal = "uxterm -fa 'Ubuntu Mono'"
           , borderWidth = 3
+	  , focusFollowsMouse = False
           } `additionalKeys`
-          [ ((mod1Mask, xK_p), spawn "dmenu_run")
+          [ ((mod1Mask, xK_Return), spawn "dmenu_run")
           ]
       '';
     };
