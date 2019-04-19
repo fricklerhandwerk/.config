@@ -12,7 +12,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "x240";
-  networking.wireless.enable = true;
+  networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Berlin";
 
