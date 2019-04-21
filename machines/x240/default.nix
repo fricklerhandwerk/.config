@@ -19,7 +19,10 @@
   services.xserver = {
     enable = true;
     displayManager.lightdm.enable = true;
+    xkbOptions = "altwin:swap_lalt_lwin";
   };
+  i18n.consoleUseXkbConfig = true;
+
   # enable backlight keys
   programs.light.enable = true;
   # enable media keys
