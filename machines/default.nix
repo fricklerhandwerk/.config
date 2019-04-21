@@ -19,4 +19,7 @@ with config;
     extraGroups = [ "wheel" "networkmanager" "input" "audio" ];
   };
   home-config.users.vg.repo = https://github.com/fricklerhandwerk/.config;
+  # TODO: if `home-config.users.<user>.file` is not the default, the
+  # home-manager package for that user should be wrapped to use the
+  # correct config file automatically.
 }
