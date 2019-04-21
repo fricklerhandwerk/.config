@@ -3,7 +3,7 @@
   disabledModules = [ "services/hardware/actkbd.nix" ];
   imports = [
     ../default.nix
-    ../actkbd.nix
+    ../../modules/actkbd.nix
     /etc/nixos/hardware-configuration.nix
     <nixos-hardware/lenovo/thinkpad/x250>
   ];
