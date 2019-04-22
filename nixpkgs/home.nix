@@ -3,7 +3,7 @@ with builtins;
 {
   imports = [
     ./secrets.nix
-    ./xmonad.nix
+    ./xmonad
   ];
   home.packages = with pkgs; [
     qutebrowser
