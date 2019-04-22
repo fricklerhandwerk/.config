@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     dmenu
+    haskellPackages.yeganesh
   ];
   xsession = {
     enable = true;

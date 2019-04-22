@@ -12,5 +12,5 @@ main = xmonad $ defaultConfig
   , borderWidth = 3
   , focusFollowsMouse = False
   } `additionalKeys`
-  [ ((mod4Mask, xK_Return), spawn "dmenu_run")
+  [ ((mod4Mask, xK_Return), spawn "$(yeganesh -x)")
   ]
