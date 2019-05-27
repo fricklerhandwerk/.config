@@ -7,7 +7,9 @@ with builtins;
   ];
   home.packages = with pkgs; [
     qutebrowser
+    ranger
     afpfs-ng
+    vlc
   ];
   services.screen-locker = {
     enable = true;
