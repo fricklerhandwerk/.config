@@ -19,14 +19,17 @@ with config;
     nssmdns = true;
   };
 
+  programs.fish.enable = true;
 
   users.users.vg = {
     isNormalUser = true;
     uid = 1000;
     extraGroups = [ "wheel" "networkmanager" "input" "audio" ];
+    shell = pkgs.fish;
   };
-  home-config.users.vg.repo = https://github.com/fricklerhandwerk/.config;
+
   # TODO: if `home-config.users.<user>.file` is not the default, the
   # home-manager package for that user should be wrapped to use the
   # correct config file automatically.
+  home-config.users.vg.repo = https://github.com/fricklerhandwerk/.config;
 }
