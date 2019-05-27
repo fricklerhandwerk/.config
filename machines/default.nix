@@ -13,6 +13,13 @@ with config;
     pulseaudio-ctl
   ];
 
+  # resolve `.local` domains
+  services.avahi = {
+    enable = true;
+    nssmdns = true;
+  };
+
+
   users.users.vg = {
     isNormalUser = true;
     uid = 1000;

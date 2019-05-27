@@ -7,6 +7,7 @@ with builtins;
   ];
   home.packages = with pkgs; [
     qutebrowser
+    afpfs-ng
   ];
   services.screen-locker = {
     enable = true;
