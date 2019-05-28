@@ -35,9 +35,11 @@ in
       });
     };
   };
-  config.nixpkgs.overlays = [ home-manager-overlay ];
-  config.systemd = mkIf (users != {}) {
-    services = mapAttrs' (username: cfg:
+  config = {
+    nixpkgs.overlays = [ home-manager-overlay ];
+
+    # run get user configuration on startup
+    systemd.services = mkIf (users != {}) (mapAttrs' (username: cfg:
       nameValuePair ("home-config-${utils.escapeSystemdPath username}") {
         description = "initial home-manager configuration for ${username}";
         wantedBy = [ "multi-user.target" ];
@@ -60,6 +62,19 @@ in
           '';
         };
       }
-    ) users;
+    ) users);
+
+    # use `home-manager` with correct path per user
+    users.users = with pkgs; mkIf (users != {}) (mapAttrs' (username: cfg:
+      nameValuePair username {packages = [ (symlinkJoin {
+        name = "home-manager";
+        paths = [
+          (writeShellScriptBin "home-manager" ''
+            exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
+           '')
+          home-manager
+        ];
+      })];
+    }) users);
   };
 }

@@ -9,7 +9,6 @@ with config;
   environment.systemPackages = with pkgs; [
     neovim
     git
-    home-manager
     pulseaudio-ctl
   ];
 
@@ -28,8 +27,8 @@ with config;
     shell = pkgs.fish;
   };
 
-  # TODO: if `home-config.users.<user>.file` is not the default, the
-  # home-manager package for that user should be wrapped to use the
-  # correct config file automatically.
-  home-config.users.vg.repo = https://github.com/fricklerhandwerk/.config;
+  home-config.users.vg = {
+    repo = https://github.com/fricklerhandwerk/.config;
+    file = "home-manager/default.nix";
+  };
 }
