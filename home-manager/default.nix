@@ -10,6 +10,7 @@ with builtins;
     ranger
     afpfs-ng
     vlc
+    acpi
   ];
   programs.fish = {
     enable = true;
