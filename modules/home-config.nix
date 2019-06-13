@@ -7,7 +7,7 @@ let
     home-manager = let
       src = fetchTarball {
         url = https://github.com/rycee/home-manager/archive/release-18.09.tar.gz;
-        sha256 = "0g4d1z96pkdfdxgs5w4bkik3p25g6j322vk9m0l9jqc4412f513g";
+        sha256 = "0r1mv2ynavk5jm48j0w7gpvqzlb3d8588bq5hyj4m69jwgli8m30";
       };
     in (import src {inherit pkgs;}).home-manager;
   };
