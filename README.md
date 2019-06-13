@@ -1,9 +1,8 @@
 # .config
 
-To set up a fresh machine, mount the installation partition under `/mnt`, run `nixos-generate-config --root /mnt`, and get `configuration.nix` from this repo in place
+To set up a fresh machine, mount the installation partition under `/mnt`, run `nixos-generate-config --root /mnt`, then
 
-    # git archive --remote=git://github.com/fricklerhandwerk/.config.git HEAD configuration.nix | tar -xO /mnt/etc/nixos/configuration.nix
+    nix-shell -p git --run "git clone https://github.com/fricklerhandwerk/.config"
+    NIXOS_CONFIG=$(pwd)/.config/machines/<machine>/default.nix nixos-install
 
-After `nixos-install`, a user logging in should have its `home-manager` configuration active as specified in `configuration.nix`
-
-subsequent system rebuilds must only activate the global `home-manager` configuration for a user if and only if none existed at build time.
+After rebooting a user logging in should have its `home-manager` configuration active as specified in the `home-config` option.
