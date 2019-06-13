@@ -16,8 +16,8 @@ let secrets = "$HOME/.config/secrets"; in
         echo "secret storage not mounted"
         exit 1
       fi
-      cp -R $mnt/secrets ${secrets}
-      chmod -RT u=rwx,g=,o= ${secrets}
+      cp -RT $mnt/secrets ${secrets}
+      chmod -R u=rwx,g=,o= ${secrets}
       fi
   '';
   home.activation.sshKeys = dagEntryAfter ["copySecrets"] ''
