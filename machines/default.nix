@@ -2,6 +2,7 @@
 with config;
 {
   imports = [
+    /etc/nixos/hardware-configuration.nix
     ../modules/home-config.nix
   ];
   system.stateVersion = "18.09";

@@ -4,7 +4,6 @@
   imports = [
     ../default.nix
     ../../modules/actkbd.nix
-    /etc/nixos/hardware-configuration.nix
     <nixos-hardware/lenovo/thinkpad/x250>
   ];
 
