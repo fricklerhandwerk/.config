@@ -11,10 +11,9 @@ with builtins;
     afpfs-ng
     vlc
     acpi
+    udiskie
   ];
-  programs.fish = {
-    enable = true;
-  };
+  programs.fish.enable = true;
   home.sessionVariables = {
     EDITOR = "nvim";
   };
@@ -22,4 +21,5 @@ with builtins;
     enable = true;
     lockCmd = "${pkgs.xsecurelock}/bin/xsecurelock";
   };
+  services.udiskie.enable = true;
 }
