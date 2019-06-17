@@ -1,0 +1,7 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i fish -p fish
+
+set dir (dirname (readlink -f (status -f)))
+nixos-generate-config --root /mnt --show-hardware-config > $dir/machines/hardware-configuration.nix
+set -e system
+env NIXOS_CONFIG=$dir/machines/$argv[1]/default.nix nixos-install
