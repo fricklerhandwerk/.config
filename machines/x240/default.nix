@@ -1,10 +1,14 @@
 { config, pkgs,  ... }:
+let
+  # there is no extra definition for x240
+  thinkpad-x250 = "${(builtins.fetchTarball "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz")}/lenovo/thinkpad/x250";
+in
 {
   disabledModules = [ "services/hardware/actkbd.nix" ];
   imports = [
     ../default.nix
+    thinkpad-x250
     ../../modules/actkbd.nix
-    <nixos-hardware/lenovo/thinkpad/x250>
   ];
 
   boot.loader.systemd-boot.enable = true;
