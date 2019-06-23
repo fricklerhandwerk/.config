@@ -30,6 +30,6 @@ with config;
 
   home-config.users.vg = {
     repo = https://github.com/fricklerhandwerk/.config;
-    file = "home-manager/default.nix";
+    file = "home-manager/nixos/default.nix";
   };
 }

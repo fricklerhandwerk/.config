@@ -66,15 +66,18 @@ in
 
     # use `home-manager` with correct path per user
     users.users = with pkgs; mkIf (users != {}) (mapAttrs' (username: cfg:
-      nameValuePair username {packages = [ (symlinkJoin {
-        name = "home-manager";
-        paths = [
-          (writeShellScriptBin "home-manager" ''
-            exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
-           '')
-          home-manager
-        ];
-      })];
+    nameValuePair username {
+      packages = [
+        (symlinkJoin {
+          name = "home-manager";
+          paths = [
+            (writeShellScriptBin "home-manager" ''
+              exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
+             '')
+            home-manager
+          ];
+        })
+      ];
     }) users);
   };
 }
