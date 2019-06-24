@@ -1,14 +1,14 @@
 { config, lib, pkgs, utils,  ... }:
 with lib;
-with builtins;
 let
   # TODO: extend `config.users.users` to accomodate the new fields.
   users = config.home-config.users;
   home-manager-overlay = self: super: {
     home-manager = let
-      src = fetchTarball {
-        url = https://github.com/rycee/home-manager/archive/release-18.09.tar.gz;
-        sha256 = "0r1mv2ynavk5jm48j0w7gpvqzlb3d8588bq5hyj4m69jwgli8m30";
+      src = builtins.fetchGit {
+        name = "home-manager-${config.system.stateVersion}";
+        url = https://github.com/rycee/home-manager;
+        ref = "release-${config.system.stateVersion}";
       };
     in (import src {inherit pkgs;}).home-manager;
   };

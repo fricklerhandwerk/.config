@@ -1,12 +1,17 @@
 { config, pkgs,  ... }:
 let
+  thinkpad-x240 = let
+    src = builtins.fetchGit {
+      url = https://github.com/NixOS/nixos-hardware;
+      ref = "master";
+    };
   # there is no extra definition for x240
-  thinkpad-x250 = "${(builtins.fetchTarball "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz")}/lenovo/thinkpad/x250";
+  in "${src}/lenovo/thinkpad/x250";
 in
 {
   imports = [
-    thinkpad-x250
     ../default.nix
+    thinkpad-x240
     ./audio.nix
     ./backlight.nix
   ];
