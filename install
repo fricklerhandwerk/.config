@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i fish -p fish
+#! nix-shell -i fish -p fish -p git
 
 set current (dirname (readlink -f (status -f)))
 # TODO: proper command line options, e.g. `install <machine> [--root <root>]`
