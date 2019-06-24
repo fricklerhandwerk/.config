@@ -4,11 +4,11 @@ let
   thinkpad-x250 = "${(builtins.fetchTarball "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz")}/lenovo/thinkpad/x250";
 in
 {
-  disabledModules = [ "services/hardware/actkbd.nix" ];
   imports = [
-    ../default.nix
     thinkpad-x250
-    ../../modules/actkbd.nix
+    ../default.nix
+    ./audio.nix
+    ./backlight.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -25,30 +25,4 @@ in
     xkbOptions = "altwin:swap_lalt_lwin";
   };
   i18n.consoleUseXkbConfig = true;
-
-  # enable backlight keys
-  programs.light.enable = true;
-  # enable media keys
-  hardware.pulseaudio.enable = true;
-  services.actkbd = {
-    enable = true;
-    bindings = let step = "85"; light = "/run/wrappers/bin/light -r"; in [
-      { keys = [224]; events = ["key"]; command = "${light} -U ${step}"; }
-      { keys = [225]; events = ["key"];
-        command = "${pkgs.writeScript "brightness-up" ''
-          if [[ $(${light} -G) -eq "0" ]]; then
-            ${light} -S 1
-          else
-            ${light} -A ${step}
-          fi
-        ''}";
-      }
-    ];
-    user-bindings = let audio = "${pkgs.pulseaudio-ctl}/bin/pulseaudio-ctl"; in [
-      { keys = [113]; events = ["key"]; command = "${audio} mute"; }
-      { keys = [114]; events = ["key"]; command = "${audio} mute no && ${audio} down"; }
-      { keys = [115]; events = ["key"]; command = "${audio} mute no && ${audio} up"; }
-      { keys = [190]; events = ["key"]; command = "${audio} mute-input"; }
-    ];
-  };
 }

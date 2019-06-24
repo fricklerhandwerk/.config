@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
+  # TODO: do not disable original actkbd, just add new fields if possible
   cfg = config.services.actkbd;
 
   configFile = bindings: pkgs.writeText "actkbd.conf" ''

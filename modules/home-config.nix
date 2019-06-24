@@ -2,6 +2,7 @@
 with lib;
 with builtins;
 let
+  # TODO: extend `config.users.users` to accomodate the new fields.
   users = config.home-config.users;
   home-manager-overlay = self: super: {
     home-manager = let
