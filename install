@@ -1,7 +1,33 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i fish -p fish
 
-set dir (dirname (readlink -f (status -f)))
-nixos-generate-config --root /mnt --show-hardware-config > $dir/machines/hardware-configuration.nix
+set current (dirname (readlink -f (status -f)))
+# TODO: proper command line options, e.g. `install <machine> [--root <root>]`
+if set -q argv[1]
+  set machine $argv[1]
+else
+  echo "specify a machine:"
+  for i in (ls -d $current/machines/*/)
+    echo (basename $i)
+  end
+  exit 1
+end
+set root /mnt
+
+# `nix-shell` uses `$system` to denote the operating system, while
+# `nixos-install` uses the same name as an option to use a system's derivation
+# for building. they do not match and we do not need the latter, therefore
+# unset.
 set -e system
-env NIXOS_CONFIG=$dir/machines/$argv[1]/default.nix nixos-install
+
+# generate current machine's hardware configuration
+mkdir -p $root/etc/nixos
+nixos-generate-config --root $root --show-hardware-config | tee \
+  $root/etc/nixos/hardware-configuration.nix \
+  # FIXME: there should be no copy of the hardware-config, not even an
+  # ephemeral one. this line is an artifact of conflating system and user
+  # configuration.
+  $current/machines/hardware-configuration.nix \
+  > /dev/null
+
+env NIXOS_CONFIG=$current/machines/$machine/default.nix nixos-install
