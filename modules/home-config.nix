@@ -12,6 +12,15 @@ let
       };
     in (import src {inherit pkgs;}).home-manager;
   };
+  user-home-manager = cfg: with pkgs; (symlinkJoin {
+    name = "home-manager";
+    paths = [
+      (writeShellScriptBin "home-manager" ''
+        exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
+       '')
+      home-manager
+    ];
+  });
 in
 {
   options = {
@@ -22,6 +31,11 @@ in
           repo = mkOption {
             type = types.str;
             description = "git repository with user configuration";
+          };
+          branch = mkOption {
+            type = types.str;
+            default = "master";
+            description = "branch in repository to clone";
           };
           path = mkOption {
             type = types.str;
@@ -50,17 +64,22 @@ in
           User = username;
           Type = "oneshot";
           SyslogIdentifier = "home-config-${username}";
-          ExecStart = writeScript "home-config-${username}"
-          ''
-            #! ${stdenv.shell} -el
-            if [[ ! -d $HOME/${cfg.path} ]]; then
-              cd $HOME
-              ${git}/bin/git clone ${cfg.repo} ${cfg.path}
-              ${home-manager}/bin/home-manager \
-              -f ${cfg.path}/${cfg.file} \
-              switch
-            fi
-          '';
+          ExecStart = let
+            git = "${pkgs.git}/bin/git";
+            home-manager = "${user-home-manager cfg}/bin/home-manager";
+          in
+            writeScript "home-config-${username}"
+            ''
+              #! ${stdenv.shell} -el
+              mkdir -p $HOME/${cfg.path}
+              cd $HOME/${cfg.path}
+              ${git} init
+              ${git} remote add origin ${cfg.repo} \
+                || { echo "keep existing repository state"; exit 0; }
+              ${git} fetch
+              ${git} checkout ${cfg.branch} --force
+              ${home-manager} switch
+            '';
         };
       }
     ) users);
@@ -68,17 +87,7 @@ in
     # use `home-manager` with correct path per user
     users.users = with pkgs; mkIf (users != {}) (mapAttrs' (username: cfg:
     nameValuePair username {
-      packages = [
-        (symlinkJoin {
-          name = "home-manager";
-          paths = [
-            (writeShellScriptBin "home-manager" ''
-              exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
-             '')
-            home-manager
-          ];
-        })
-      ];
+      packages = [ (user-home-manager cfg) ];
     }) users);
   };
 }
