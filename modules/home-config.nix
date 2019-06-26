@@ -84,6 +84,29 @@ in
       }
     ) users);
 
+    # this is a user-specific requirement, but needs to be supported by the
+    # system for fully-automatic bootstrapping *before* first login. not sure
+    # what could be a good approach to deploying secrets except storing a PGP
+    # private key locally (e.g. on a USB key) and mounting it for copying.
+    # TODO: iterate over `users` and add permissions per user. there should be
+    # a field in `home-config` to define a (list of) device(s) with certain
+    # properties (such as file system UUID) and filter by those properties for
+    # mounting.
+    # polkit rule interface:
+    # <https://www.freedesktop.org/software/polkit/docs/latest/polkit.8.html#polkit-rules>
+    # udisks2 variables and actions:
+    # <http://storaged.org/doc/udisks2-api/2.7.5/udisks-polkit-actions.html>
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        var permission = {
+          "org.freedesktop.udisks2.filesystem-mount": "yes",
+        };
+        if (subject.isInGroup("wheel")) {
+          return permission[action.id];
+        }
+      });
+    '';
+
     # use `home-manager` with correct path per user
     users.users = with pkgs; mkIf (users != {}) (mapAttrs' (username: cfg:
     nameValuePair username {
