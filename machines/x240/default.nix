@@ -20,7 +20,6 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "x240";
-  networking.networkmanager.enable = true;
 
   time.timeZone = "Europe/Berlin";
 

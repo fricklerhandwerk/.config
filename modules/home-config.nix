@@ -58,8 +58,8 @@ in
       nameValuePair ("home-config-${utils.escapeSystemdPath username}") {
         description = "initial home-manager configuration for ${username}";
         wantedBy = [ "multi-user.target" ];
-        wants = [ "nix-daemon.socket" ];
-        after = [ "nix-daemon.socket" ];
+        after = [ "nix-daemon.socket" "network-online.target" ];
+        requires = [ "nix-daemon.socket" "network-online.target" ];
         serviceConfig = with pkgs; {
           User = username;
           Type = "oneshot";
