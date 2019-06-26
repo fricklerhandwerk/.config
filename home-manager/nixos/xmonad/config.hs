@@ -11,7 +11,7 @@ main = do
     -- dotfiles. eventually there should be a setup to create an XResources file
     -- in a custom location.
     , terminal = "uxterm -ls \
-                 \ -fa 'Ubuntu Mono' \
+                 \ -fa 'Ubuntu Mono' -fs 14 \
                  \ -xrm '*selectToClipboard: true' \
                  \ -xrm '*metaSendsEscape: true'"
     , borderWidth = 3
