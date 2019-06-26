@@ -30,4 +30,4 @@ nixos-generate-config --root $root --show-hardware-config | tee \
   $current/machines/hardware-configuration.nix \
   > /dev/null
 
-env NIXOS_CONFIG=$current/machines/$machine/default.nix nixos-install
+env NIXOS_CONFIG=$current/machines/$machine/default.nix nixos-install --max-jobs auto --cores (nproc)
