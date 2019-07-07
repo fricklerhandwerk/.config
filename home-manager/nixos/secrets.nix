@@ -31,8 +31,8 @@ in
       fi
       cp -RT $mnt/secrets ${secrets}
       chmod -R u=rwx,g=,o= ${secrets}
-      fi
       umount $mnt
+    fi
   '';
   # TODO: copy PGP keys
   home.activation.sshKeys = dagEntryAfter ["copySecrets"] ''
