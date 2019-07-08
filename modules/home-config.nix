@@ -1,22 +1,26 @@
 { config, lib, pkgs, utils,  ... }:
 with lib;
+with pkgs;
 let
   # TODO: extend `config.users.users` to accomodate the new fields.
   users = config.home-config.users;
-  home-manager-overlay = self: super: {
-    home-manager = let
-      src = builtins.fetchGit {
-        name = "home-manager-${config.system.stateVersion}";
-        url = https://github.com/rycee/home-manager;
-        ref = "release-${config.system.stateVersion}";
-      };
-    in (import src {inherit pkgs;}).home-manager;
+  home-manager-src = builtins.fetchGit {
+    name = "home-manager-${config.system.stateVersion}";
+    url = https://github.com/rycee/home-manager;
+    ref = "release-${config.system.stateVersion}";
   };
-  user-home-manager = cfg: with pkgs; (symlinkJoin {
+  home-manager-overlay = self: super: {
+    home-manager = (callPackage home-manager-src {}).home-manager;
+  };
+  home-manager-for-user = cfg: (symlinkJoin {
     name = "home-manager";
     paths = [
       (writeShellScriptBin "home-manager" ''
-        exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
+        # XXX: specifying the search path at runtime circumvents hardcoding
+        # it with the `/mnt` prefix when bootstrapping:
+        # <https://github.com/rycee/home-manager/issues/753>
+        exec env NIX_PATH="home-manager=${home-manager-src}:$NIX_PATH" \
+        ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
        '')
       home-manager
     ];
@@ -54,21 +58,21 @@ in
     nixpkgs.overlays = [ home-manager-overlay ];
 
     # run get user configuration on startup
-    systemd.services = mkIf (users != {}) (mapAttrs' (username: cfg:
-      nameValuePair ("home-config-${utils.escapeSystemdPath username}") {
-        description = "initial home-manager configuration for ${username}";
+    systemd.services = mkIf (users != {}) (mapAttrs' (user: cfg:
+      nameValuePair ("home-config-${utils.escapeSystemdPath user}") {
+        description = "initial home-manager configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
         after = [ "nix-daemon.socket" "network-online.target" ];
         requires = [ "nix-daemon.socket" "network-online.target" ];
-        serviceConfig = with pkgs; {
-          User = username;
+        serviceConfig = {
+          User = user;
           Type = "oneshot";
-          SyslogIdentifier = "home-config-${username}";
+          SyslogIdentifier = "home-config-${user}";
           ExecStart = let
             git = "${pkgs.git}/bin/git";
-            home-manager = "${user-home-manager cfg}/bin/home-manager";
+            home-manager = "${home-manager-for-user cfg}/bin/home-manager";
           in
-            writeScript "home-config-${username}"
+            writeScript "home-config-${user}"
             ''
               #! ${stdenv.shell} -el
               mkdir -p $HOME/${cfg.path}
@@ -108,9 +112,9 @@ in
     '';
 
     # use `home-manager` with correct path per user
-    users.users = with pkgs; mkIf (users != {}) (mapAttrs' (username: cfg:
-    nameValuePair username {
-      packages = [ (user-home-manager cfg) ];
+    users.users = mkIf (users != {}) (mapAttrs' (user: cfg:
+    nameValuePair user {
+      packages = [ (home-manager-for-user cfg) ];
     }) users);
   };
 }
