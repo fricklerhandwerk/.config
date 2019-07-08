@@ -62,6 +62,13 @@ in
       nameValuePair ("home-config-${utils.escapeSystemdPath user}") {
         description = "initial home-manager configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
+        # do not allow login before setup is finished, it would produce
+        # inconsistent results
+        # TODO: in graphical setups `display-manager.service` will
+        # start in parallel and present a login screen although it
+        # is not even usable. if `services.xserver.enable == true`
+        # add `display-manager.service` to `before`.
+        before = [ "systemd-user-sessions.service" ];
         after = [ "nix-daemon.socket" "network-online.target" ];
         requires = [ "nix-daemon.socket" "network-online.target" ];
         serviceConfig = {
@@ -104,6 +111,7 @@ in
       polkit.addRule(function(action, subject) {
         var permission = {
           "org.freedesktop.udisks2.filesystem-mount": "yes",
+          "org.freedesktop.udisks2.filesystem-mount-other-seat": "yes",
         };
         if (subject.isInGroup("wheel")) {
           return permission[action.id];
