@@ -1,14 +1,13 @@
 { config, pkgs,  ... }:
 with config;
 {
-  disabledModules = [ "services/hardware/actkbd.nix" ];
   imports = [ ../../modules/actkbd.nix ];
 
   hardware.pulseaudio.enable = true;
   environment.systemPackages = [ pkgs.pulseaudio-ctl ];
   services.actkbd = {
     enable = true;
-    user-bindings = let audio = "${pkgs.pulseaudio-ctl}/bin/pulseaudio-ctl"; in [
+    user.bindings = let audio = "${pkgs.pulseaudio-ctl}/bin/pulseaudio-ctl"; in [
       { keys = [113]; events = ["key"]; command = "${audio} mute"; }
       { keys = [114]; events = ["key"]; command = "${audio} mute no && ${audio} down"; }
       { keys = [115]; events = ["key"]; command = "${audio} mute no && ${audio} up"; }
