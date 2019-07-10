@@ -12,6 +12,9 @@ let
   home-manager-overlay = self: super: {
     home-manager = (callPackage home-manager-src {}).home-manager;
   };
+  # TODO: do not install `home-manager` per user, let users manage that
+  # themselves. then user config will be more portable, as it has to be
+  # self-contained to be convenient to get going (required for macOS).
   home-manager-for-user = cfg: (symlinkJoin {
     name = "home-manager";
     paths = [
@@ -45,6 +48,8 @@ in
             type = types.str;
             default = ".config";
             description = "clone path for configuration repository, relative to user's $HOME"; };
+          # TODO: this should be `run` and point to an executable which should
+          # set everything up for the user
           file = mkOption {
             type = types.str;
             default = "nixpkgs/home.nix";
