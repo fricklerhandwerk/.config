@@ -1,6 +1,12 @@
 # .config
 
-To set up a fresh machine, format an installation partition `/dev/sdXn` and run
+To set up a fresh machine, create an installation image on a system running `nix` and copy it to a USB stick:
+
+    ./build-image
+    > /nix/store/.../nixos-iso
+    sudo dd if=/nix/store/.../nixos-iso/iso/nixos.iso of=/dev/sdX
+
+Boot from USB, format an installation partition `/dev/sdXn` and run
 
     mount /dev/sdXn /mnt
     nix-shell -p git --run "git clone https://github.com/fricklerhandwerk/.config"
