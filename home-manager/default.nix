@@ -17,7 +17,7 @@ in
     qutebrowser
     ranger
     vlc
-    unstable.tor-browser-bundle-bin
+    (unstable.tor-browser-bundle-bin.override { mediaSupport = true; })
   ];
   programs.fish.enable = true;
   home.sessionVariables = {
