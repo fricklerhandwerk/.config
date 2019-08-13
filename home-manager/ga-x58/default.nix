@@ -4,6 +4,8 @@
     ../nixos
   ];
 
+  machine = ./.;
+
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [

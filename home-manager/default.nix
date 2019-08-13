@@ -2,7 +2,9 @@
 {
   imports = [
     ./unstable.nix
+    ./home-manager.nix
   ];
+
   home.packages = with pkgs; [
     git
     neovim

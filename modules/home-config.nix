@@ -4,28 +4,6 @@ with pkgs;
 let
   # TODO: extend `config.users.users` to accomodate the new fields.
   users = config.home-config.users;
-  home-manager-src = builtins.fetchGit {
-    name = "home-manager-${config.system.stateVersion}";
-    url = https://github.com/rycee/home-manager;
-    ref = "release-${config.system.stateVersion}";
-  };
-  home-manager-overlay = self: super: {
-    home-manager = (callPackage "${home-manager-src}/home-manager" {
-      path = "${home-manager-src}";
-    });
-  };
-  # TODO: do not install `home-manager` per user, let users manage that
-  # themselves. then user config will be more portable, as it has to be
-  # self-contained to be convenient to get going (required for macOS).
-  home-manager-for-user = cfg: (symlinkJoin {
-    name = "home-manager";
-    paths = [
-      (writeShellScriptBin "home-manager" ''
-        exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
-       '')
-      home-manager
-    ];
-  });
 in
 {
   options = {
@@ -58,8 +36,6 @@ in
     };
   };
   config = {
-    nixpkgs.overlays = [ home-manager-overlay ];
-
     # run get user configuration on startup
     systemd.services = mkIf (users != {}) (mapAttrs' (user: cfg:
       nameValuePair ("home-config-${utils.escapeSystemdPath user}") {
@@ -80,7 +56,7 @@ in
           SyslogIdentifier = "home-config-${user}";
           ExecStart = let
             git = "${pkgs.git}/bin/git";
-            home-manager = "${home-manager-for-user cfg}/bin/home-manager";
+            home-manager = "${pkgs.home-manager}/bin/home-manager";
           in
             writeScript "home-config-${user}"
             ''
@@ -92,7 +68,7 @@ in
                 || { echo "keep existing repository state"; exit 0; }
               ${git} fetch
               ${git} checkout ${cfg.branch} --force
-              ${home-manager} switch
+              ${home-manager} -f $HOME/${cfg.path}/${cfg.file} switch
             '';
         };
       }
@@ -121,11 +97,5 @@ in
         }
       });
     '';
-
-    # use `home-manager` with correct path per user
-    users.users = mkIf (users != {}) (mapAttrs' (user: cfg:
-    nameValuePair user {
-      packages = [ (home-manager-for-user cfg) ];
-    }) users);
   };
 }

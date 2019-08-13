@@ -3,4 +3,7 @@
   imports = [
     ../nixos
   ];
+
+  machine = ./.;
+
 }
