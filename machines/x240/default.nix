@@ -16,12 +16,11 @@ in
     ./backlight.nix
   ];
 
+  networking.hostName = "x240";
+  time.timeZone = "Europe/Berlin";
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "x240";
-
-  time.timeZone = "Europe/Berlin";
 
   services.xserver = {
     enable = true;

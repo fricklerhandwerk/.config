@@ -9,9 +9,6 @@
   networking.hostName = "ga-x58";
   time.timeZone = "Europe/Berlin";
 
-  # use closed-source drivers
-  nixpkgs.config.allowUnfree = true;
-
   services.xserver = {
     enable = true;
     displayManager.lightdm.enable = true;
@@ -20,6 +17,8 @@
   };
   i18n.consoleUseXkbConfig = true;
 
+  # use closed-source drivers
+  nixpkgs.config.allowUnfree = true;
   hardware.pulseaudio.enable = true;
   hardware.opengl.driSupport32Bit = true;
 }

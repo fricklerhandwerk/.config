@@ -26,7 +26,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 ## home config
 
-- separate entry points for different machines/machine types (e.g. server, laptop, workstation)
 - add gpg secrets automatically
 - slimmer interface to home-config (extend `user.users`)
 - `ssh-add` at startup
@@ -54,7 +53,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 - hibernate on critical battery
 - hibernate after suspend
 - encrypted system partition
-- add workstation to machine pool
 - add home server to machine pool
 - add remote server to machine pool
 - manage machines with NixOps

@@ -10,7 +10,6 @@ with config;
   environment.systemPackages = with pkgs; [
     neovim
     git
-    pulseaudio-ctl
   ];
 
   # resolve `.local` domains
@@ -35,6 +34,6 @@ with config;
 
   home-config.users.vg = {
     repo = https://github.com/fricklerhandwerk/.config;
-    file = "home-manager/nixos/default.nix";
+    file = "home-manager/${networking.hostName}/default.nix";
   };
 }

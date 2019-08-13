@@ -1,15 +1,8 @@
 { pkgs, ... }:
-with builtins;
-let
-  unstable = let
-    nixpkgs-unstable = fetchGit {
-      name = "nixpkgs-unstable";
-      url = "https://github.com/NixOS/nixpkgs-channels";
-      ref = "nixpkgs-unstable";
-    };
-    in import nixpkgs-unstable { config = pkgs.config; };
-in
 {
+  imports = [
+    ./unstable.nix
+  ];
   home.packages = with pkgs; [
     git
     neovim
