@@ -1,0 +1,7 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p bash
+
+set -e
+
+cfg=$(dirname $(readlink -f $1))
+nix-shell home-manager.nix -A wrapper --arg path $cfg --run "home-manager switch"

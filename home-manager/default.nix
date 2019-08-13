@@ -1,11 +1,18 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+with pkgs;
+let
+  home-manager = callPackage ./home-manager.nix {};
+in
 {
   imports = [
     ./unstable.nix
-    ./home-manager.nix
+    ./machine.nix
   ];
 
-  home.packages = with pkgs; [
+  nixpkgs.overlays = [ (self: super: {home-manager = home-manager.pkg; }) ];
+
+  home.packages = [
+    (home-manager.wrapper {path = config.machine; })
     git
     neovim
     htop

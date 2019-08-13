@@ -34,6 +34,6 @@ with config;
 
   home-config.users.vg = {
     repo = https://github.com/fricklerhandwerk/.config;
-    file = "home-manager/${networking.hostName}/default.nix";
+    install = "home-manager/${networking.hostName}/install";
   };
 }

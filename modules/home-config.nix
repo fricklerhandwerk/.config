@@ -24,12 +24,10 @@ in
             type = types.str;
             default = ".config";
             description = "clone path for configuration repository, relative to user's $HOME"; };
-          # TODO: this should be `run` and point to an executable which should
-          # set everything up for the user
-          file = mkOption {
+          install = mkOption {
             type = types.str;
-            default = "nixpkgs/home.nix";
-            description = "location of home-manager configuration file within configuration repository";
+            default = "install";
+            description = "executable in repository to run before login";
           };
         };
       });
@@ -68,7 +66,7 @@ in
                 || { echo "keep existing repository state"; exit 0; }
               ${git} fetch
               ${git} checkout ${cfg.branch} --force
-              ${home-manager} -f $HOME/${cfg.path}/${cfg.file} switch
+              $HOME/${cfg.path}/${cfg.install}
             '';
         };
       }
