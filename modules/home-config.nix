@@ -10,7 +10,9 @@ let
     ref = "release-${config.system.stateVersion}";
   };
   home-manager-overlay = self: super: {
-    home-manager = (callPackage home-manager-src {}).home-manager;
+    home-manager = (callPackage "${home-manager-src}/home-manager" {
+      path = "${home-manager-src}";
+    });
   };
   # TODO: do not install `home-manager` per user, let users manage that
   # themselves. then user config will be more portable, as it has to be
@@ -19,11 +21,7 @@ let
     name = "home-manager";
     paths = [
       (writeShellScriptBin "home-manager" ''
-        # XXX: specifying the search path at runtime circumvents hardcoding
-        # it with the `/mnt` prefix when bootstrapping:
-        # <https://github.com/rycee/home-manager/issues/753>
-        exec env NIX_PATH="home-manager=${home-manager-src}:$NIX_PATH" \
-        ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
+        exec ${home-manager}/bin/home-manager -f $HOME/${cfg.path}/${cfg.file} $@
        '')
       home-manager
     ];
