@@ -1,12 +1,12 @@
 { config, pkgs, ... }:
 with pkgs;
 let
-  home-manager = callPackage ./home-manager.nix {};
+  home-manager = callPackage ./modules/home-manager.nix {};
 in
 {
   imports = [
-    ./unstable.nix
-    ./machine.nix
+    ./modules/unstable.nix
+    ./modules/machine.nix
   ];
 
   nixpkgs.overlays = [ (self: super: {home-manager = home-manager.pkg; }) ];

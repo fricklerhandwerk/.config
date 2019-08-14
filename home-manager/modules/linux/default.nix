@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../default.nix
+    ../..
     ./xmonad
     ./secrets.nix
     ./udiskie.nix

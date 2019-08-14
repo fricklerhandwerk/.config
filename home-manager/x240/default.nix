@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../nixos
+    ../modules/linux
   ];
 
   machine = ./.;
