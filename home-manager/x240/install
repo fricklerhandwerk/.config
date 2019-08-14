@@ -1,5 +1,0 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bash
-
-current=$(dirname $(readlink -f $0))
-$current/../install $0

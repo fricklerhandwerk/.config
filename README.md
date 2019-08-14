@@ -40,7 +40,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 ## machine config
 
-- do not install `home-manager` for users (just run activation script)
 - wait for `network-online` on 19.03
 - hardware-configuration under version control
 - hard disk formatting as part of installation script

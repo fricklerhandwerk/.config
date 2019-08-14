@@ -6,7 +6,7 @@ rec {
     url = https://github.com/rycee/home-manager;
     ref = "release-18.09";
   };
-  pkg = (callPackage src { path = "${src}"; }).home-manager;
+  pkg = callPackage "${src}/home-manager" { path = "${src}"; };
   wrapper = {path}: (symlinkJoin {
     name = "home-manager";
     paths = [
@@ -16,4 +16,5 @@ rec {
       pkg
     ];
   });
+  env = mkShell { buildInputs = [ pkg ]; };
 }
