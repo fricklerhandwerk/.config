@@ -16,4 +16,6 @@ fi
 
 cfg=$current/machines/$machine
 
-nix-shell modules/home-manager.nix -A env --run "home-manager -f $cfg switch"
+nix-shell -E \
+"with import <nixpkgs> {}; mkShell { buildInputs = [ (callPackage $current/modules/home-manager.nix {}) ]; }" \
+--run "home-manager -f $cfg switch"
