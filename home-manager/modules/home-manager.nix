@@ -2,9 +2,9 @@
 with pkgs;
 let
   src = builtins.fetchGit {
-    name = "home-manager-18.09";
+    name = "home-manager-19.03";
     url = https://github.com/rycee/home-manager;
-    ref = "release-18.09";
+    ref = "release-19.03";
   };
 in
 callPackage "${src}/home-manager" { path = "${src}"; }

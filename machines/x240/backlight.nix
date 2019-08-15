@@ -3,7 +3,7 @@
   programs.light.enable = true;
   services.actkbd = {
     enable = true;
-    bindings = let step = "85"; light = "/run/wrappers/bin/light -r"; in [
+    bindings = let step = "85"; light = "${pkgs.light}/bin/light -r"; in [
       { keys = [224]; events = ["key"]; command = "${light} -U ${step}"; }
       { keys = [225]; events = ["key"];
         command = "${pkgs.writeScript "brightness-up" ''

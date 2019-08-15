@@ -3,10 +3,8 @@ let
   nixpkgs = builtins.fetchGit {
     name = "nixpkgs";
     url = "https://github.com/NixOS/nixpkgs";
-    # a version where `NetworkManager-wait-online.service` works,
-    # see <ec83b8ccc11de36007ac418e2425f96e2db4018a>
-    ref = "release-18.09";
-    rev = "0d84ab811e216d0711fb2afae7b0a96e78299fca";
+    ref = "release-19.03";
+    rev = "520c39049f585c05f216bc12c088e4f5fd988d73";
   };
   config = { pkgs, ... }: {
     imports = [
