@@ -4,9 +4,11 @@ with pkgs;
   imports = [
     ./modules/unstable.nix
     ./modules/machine.nix
+    ./modules/git.nix
   ];
 
   home.packages = [
+    ripgrep
     git
     neovim
     htop

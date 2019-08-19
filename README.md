@@ -30,7 +30,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 - slimmer interface to home-config (extend `user.users`)
 - `ssh-add` at startup
 - vim config
-- git config
 - continuous backup to network storage (and retrieval)
 - status bar
 - mail
