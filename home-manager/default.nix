@@ -5,12 +5,12 @@ with pkgs;
     ./modules/unstable.nix
     ./modules/machine.nix
     ./modules/git.nix
+    ./modules/nvim
   ];
 
   home.packages = [
     ripgrep
     git
-    neovim
     htop
     qutebrowser
     ranger
