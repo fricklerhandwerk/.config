@@ -34,7 +34,9 @@ in
       umount $mnt
     fi
   '';
-  # TODO: copy PGP keys
+  home.activation.gpgKeys = dagEntryAfter ["copySecrets"] ''
+    ${pkgs.gnupg}/bin/gpg --import ${secrets}/gpg/AE02F55D.asc
+  '';
   home.activation.sshKeys = dagEntryAfter ["copySecrets"] ''
     install -D -m600 ${secrets}/ssh/id_rsa_github $HOME/.ssh/id_rsa_github
   '';
