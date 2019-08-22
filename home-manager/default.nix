@@ -4,8 +4,9 @@ with pkgs;
   imports = [
     ./modules/unstable.nix
     ./modules/machine.nix
-    ./modules/git.nix
     ./modules/nvim
+    ./modules/fish.nix
+    ./modules/git.nix
   ];
 
   home.packages = [
@@ -17,7 +18,6 @@ with pkgs;
     vlc
     (unstable.tor-browser-bundle-bin.override { mediaSupport = true; })
   ];
-  programs.fish.enable = true;
   home.sessionVariables = {
     EDITOR = "nvim";
   };

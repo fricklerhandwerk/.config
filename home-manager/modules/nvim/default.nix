@@ -9,6 +9,7 @@
       packages.vam = with pkgs.vimPlugins;
         let unstable = pkgs.unstable.vimPlugins; in {
         start = [
+          unstable.vim-fish
           fugitive
           vim-nix
           vim-surround
