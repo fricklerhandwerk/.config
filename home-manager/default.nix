@@ -6,6 +6,7 @@ with pkgs;
     ./modules/machine.nix
     ./modules/nvim
     ./modules/fish.nix
+    ./modules/ssh.nix
     ./modules/git.nix
   ];
 

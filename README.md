@@ -27,7 +27,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 ## home config
 
 - slimmer interface to home-config (extend `user.users`)
-- `ssh-add` at startup
 - continuous backup to network storage (and retrieval)
 - status bar
 - mail

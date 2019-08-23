@@ -5,6 +5,7 @@
     ./xmonad
     ./secrets.nix
     ./udiskie.nix
+    ./ssh-agent.nix
   ];
 
   home.packages = with pkgs; [
