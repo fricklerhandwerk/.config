@@ -56,7 +56,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 ## nice to have
 
-- color theme for uxterm
 - custom greeter
 - switch user on lock screen
 - create minimal python package

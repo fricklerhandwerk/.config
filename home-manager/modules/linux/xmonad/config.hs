@@ -10,10 +10,7 @@ main = do
     -- pass config as command line parameters for now to prevent creating more
     -- dotfiles. eventually there should be a setup to create an XResources file
     -- in a custom location.
-    , terminal = "uxterm -ls \
-                 \ -fa 'Ubuntu Mono' -fs 14 \
-                 \ -xrm '*selectToClipboard: true' \
-                 \ -xrm '*metaSendsEscape: true'"
+    , terminal = "kitty"
     , borderWidth = 3
     , focusFollowsMouse = False
     , layoutHook = smartBorders $ layoutHook defaultConfig

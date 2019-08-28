@@ -2,7 +2,7 @@
 set termguicolors
 
 colorscheme NeoSolarized
-set background=light
+set background=dark
 
 let mapleader=","
 let maplocalleader=","
