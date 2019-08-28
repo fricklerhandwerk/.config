@@ -39,13 +39,10 @@ in
       nameValuePair ("home-config-${utils.escapeSystemdPath user}") {
         description = "initial home-manager configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
-        # do not allow login before setup is finished, it would produce
-        # inconsistent results
-        # TODO: in graphical setups `display-manager.service` will
-        # start in parallel and present a login screen although it
-        # is not even usable. if `services.xserver.enable == true`
-        # add `display-manager.service` to `before`.
-        before = [ "systemd-user-sessions.service" ];
+        # do not allow login before setup is finished. after first boot the
+        # process takes a long time, and the user would log into a broken
+        # environment. let display manager wait in graphical setups.
+        before = [ "systemd-user-sessions.service" ] ++ optional config.services.xserver.enable "display-manager-service";
         after = [ "nix-daemon.socket" "network-online.target" ];
         requires = [ "nix-daemon.socket" "network-online.target" ];
         serviceConfig = {
