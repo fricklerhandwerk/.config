@@ -1,20 +1,21 @@
 import XMonad
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+import XMonad.Layout.NoBorders
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.Run(spawnPipe)
-import XMonad.Hooks.DynamicLog
-import XMonad.Layout.NoBorders
+import System.IO
 
 main = do
-  cfg <- xmobar $ defaultConfig
+  xmobar <- spawnPipe "xmobar"
+  xmonad $ docks defaultConfig
     { modMask = mod4Mask
-    -- pass config as command line parameters for now to prevent creating more
-    -- dotfiles. eventually there should be a setup to create an XResources file
-    -- in a custom location.
     , terminal = "kitty"
     , borderWidth = 3
     , focusFollowsMouse = False
-    , layoutHook = smartBorders $ layoutHook defaultConfig
+    , layoutHook = smartBorders $ avoidStruts $ layoutHook defaultConfig
+    , logHook = dynamicLogWithPP xmobarPP { ppOutput = hPutStrLn xmobar }
     } `additionalKeys`
     [ ((mod4Mask, xK_Return), spawn "$(yeganesh -x)")
+    , ((mod4Mask, xK_b), sendMessage ToggleStruts)
     ]
-  xmonad cfg

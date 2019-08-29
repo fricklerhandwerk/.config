@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     dmenu
     haskellPackages.yeganesh
+    haskellPackages.xmobar
     kitty
   ];
   xsession = {
