@@ -2,7 +2,7 @@
 {
   imports = [
     ../..
-    ./xmonad
+    ./desktop-environment
     ./secrets.nix
     ./udiskie.nix
     ./ssh-agent.nix
