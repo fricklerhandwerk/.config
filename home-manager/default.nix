@@ -13,6 +13,7 @@ with pkgs;
   home.packages = [
     ripgrep
     git
+    gitAndTools.hub
     htop
     qutebrowser
     ranger
