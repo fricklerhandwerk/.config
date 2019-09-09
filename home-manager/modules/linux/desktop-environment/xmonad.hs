@@ -7,14 +7,13 @@ import XMonad.Util.Run(spawnPipe)
 import System.IO
 
 main = do
-  xmobar <- spawnPipe "xmobar"
+  spawn "while true; do date +'%a. %Y-%m-%d %H:%M'; sleep 2; done | dzen2 -dock -fn Ubuntu"
   xmonad $ docks defaultConfig
     { modMask = mod4Mask
     , terminal = "kitty"
     , borderWidth = 3
     , focusFollowsMouse = False
     , layoutHook = smartBorders $ avoidStruts $ layoutHook defaultConfig
-    , logHook = dynamicLogWithPP xmobarPP { ppOutput = hPutStrLn xmobar }
     } `additionalKeys`
     [ ((mod4Mask, xK_Return), spawn "$(yeganesh -x)")
     , ((mod4Mask, xK_b), sendMessage ToggleStruts)

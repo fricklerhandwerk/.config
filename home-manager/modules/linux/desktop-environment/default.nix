@@ -15,7 +15,9 @@
     dmenu
     kitty
     haskellPackages.yeganesh
-    haskellPackages.xmobar
+    dzen2
+    conky
   ];
+  fonts.fontconfig.enableProfileFonts = true;
   xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
 }
