@@ -28,7 +28,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 - slimmer interface to home-config (extend `user.users`)
 - continuous backup to network storage (and retrieval)
-- status bar
 - mail
 - lock all logged-in sessions for a user on lid close
   - `phsylock` for terminal, `xsecurelock` for X
