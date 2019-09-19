@@ -4,11 +4,11 @@ Config
   , additionalFonts = ["xft:Ubuntu:size=8"], textOffsets = [13]
   , alpha = 0
   , position = TopSize C 100 24
-  , commands = [ Run DynNetwork [ "-t", "<rx>  <tx>  "
+  , commands = [ Run DynNetwork [ "-t", "  <rx>  <tx>  "
                                 , "--suffix", "True"
                                 , "--width", "6"
                                 ] 10
-               , Run Wireless "wlp3s0" ["-t", " <essid><fn=1> <qualitybar> </fn>"
+               , Run Wireless "wlp3s0" ["-t", "<essid><fn=1> <qualitybar></fn>"
                                        , "--bfore", "▮"
                                        , "--bback", "▯"
                                        , "--bwidth", "5"
@@ -32,7 +32,7 @@ Config
                ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = " %multicpu% %cpufreq% | %memory% %swap% | %disku% %diskio%}\
-                \{ %wlp3s0wi%%dynnetwork%| %alsa:default:Master% | %bat0% | %bat1% | %date% "
+  , template = " %multicpu% %cpufreq% | %memory% %swap% | %disku% %diskio% |%dynnetwork%%wlp3s0wi% }\
+                \{ %alsa:default:Master% | %bat0% | %bat1% | %date% "
   }
 
