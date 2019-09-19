@@ -7,6 +7,10 @@ set background=dark
 let mapleader=","
 let maplocalleader=","
 
+" use X clipboard
+set clipboard=unnamed
+set clipboard=unnamedplus
+
 " detect file type for plugins and indentation
 filetype on
 filetype plugin on
