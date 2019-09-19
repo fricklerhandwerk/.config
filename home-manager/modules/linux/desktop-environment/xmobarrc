@@ -1,29 +1,38 @@
 Config
-  { font = "xft:UbuntuMono:size=10"
-  , additionalFonts = []
-  , alpha = 255
-  , position = Top
-  , allDesktops = True
-  , overrideRedirect = True
-  , commands = [ Run DynNetwork ["-t", "<tx> KB/s up | <rx> KB/s down",
-                                 "--normal","green","--high","red"] 10
-               , Run Wireless "wlp3s0" ["-t", "<essid> <qualitybar> "] 20
-               , Run MultiCpu ["-t", "CPU: <total>% <autobar>",
-                               "--normal","green","--high","red"] 10
-               , Run CpuFreq ["-t", "<cpu0> GHz"] 10
-               , Run Memory ["-t","Mem: <usedratio>%"] 10
-               , Run DiskU [("/", "<used>/<size> used")] [] 30
-               , Run DiskIO [("/", "<write> write <read> read")] [] 5
-               , Run Swap [] 20
-               , Run Alsa "default" "Master" []
-               , Run Date "%a %Y-%M-%d %H:%M" "date" 20
-               , Run BatteryN ["BAT0"] ["-t", "BAT0: <left>% <timeleft>h"] 20 "bat0"
-               , Run BatteryN ["BAT1"] ["-t", "BAT1: <left>% <timeleft>h"] 20 "bat1"
+  { font = "xft:UbuntuMono:size=10,Font Awesome 5 Free:style=Solid:size=10"
+  -- correct for vertically off-center bar characters
+  , additionalFonts = ["xft:Ubuntu:size=8"], textOffsets = [13]
+  , alpha = 0
+  , position = TopSize C 100 24
+  , commands = [ Run DynNetwork [ "-t", "<rx>  <tx>  "
+                                , "--suffix", "True"
+                                , "--width", "6"
+                                ] 10
+               , Run Wireless "wlp3s0" ["-t", " <essid><fn=1> <qualitybar> </fn>"
+                                       , "--bfore", "▮"
+                                       , "--bback", "▯"
+                                       , "--bwidth", "5"
+                                       , "--nastring", ""
+                                       ] 20
+               , Run MultiCpu ["-t", " <autovbar> <total>%", "--width", "3"] 10
+               , Run CpuFreq ["-t", "<cpu0>GHz", "--width", "3", "--ddigits", "1"] 10
+               , Run Memory ["-t"," <used>M/<total>M"] 10
+               , Run DiskU [("/", " <used>/<size>")] [] 30
+               , Run DiskIO [("/", "<write>  <read> ")] ["--width", "4"] 5
+               , Run Swap ["-t"," <used>M"] 20
+               , Run Alsa "default" "Master" [ "-t", "<status><fn=1> <volumebar></fn>"
+                                             , "--bfore", "▮"
+                                             , "--bback", "▯"
+                                             , "--bwidth", "10"
+                                             , "--", "--on", "", "--off", "", "--onc", "white"]
+               , Run Date "%a. %Y-%M-%d %H:%M" "date" 20
+               -- this can be made even more sleek with icon patterns for different power stati
+               , Run BatteryN ["BAT0"] ["-t", " <acstatus> <left>% <timeleft>h", "--", "-O", "", "-i", "", "-o", " "] 20 "bat0"
+               , Run BatteryN ["BAT1"] ["-t", " <acstatus> <left>% <timeleft>h", "--", "-O", "", "-i", "", "-o", " "] 20 "bat1"
                ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%multicpu% %cpufreq% | %memory% | %swap% | %disku% }\
-                \{ %diskio% | %wlp3s0wi%%dynnetwork% | \
-                \%alsa:default:Master% | %bat0% | %bat1% | <fc=#ee9a00>%date%</fc>"
+  , template = " %multicpu% %cpufreq% | %memory% %swap% | %disku% %diskio%}\
+                \{ %wlp3s0wi%%dynnetwork%| %alsa:default:Master% | %bat0% | %bat1% | %date% "
   }
 

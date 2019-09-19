@@ -1,20 +1,28 @@
+import Text.Format
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.NoBorders
-import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.EZConfig(additionalKeys, removeKeys)
 import XMonad.Util.Run(spawnPipe)
 import System.IO
 
 main = do
-  spawn "while true; do date +'%a. %Y-%m-%d %H:%M'; sleep 2; done | dzen2 -dock -fn Ubuntu"
+  spawn statusBar
   xmonad $ docks defaultConfig
-    { modMask = mod4Mask
-    , terminal = "kitty"
+    { modMask = super
+    , terminal = terminal
     , borderWidth = 3
     , focusFollowsMouse = False
     , layoutHook = smartBorders $ avoidStruts $ layoutHook defaultConfig
-    } `additionalKeys`
-    [ ((mod4Mask, xK_Return), spawn "$(yeganesh -x)")
-    , ((mod4Mask, xK_b), sendMessage ToggleStruts)
+    } `removeKeys`
+    [ (super, xK_q) -- reloading programmatically does not clean up spawned processes
+    ] `additionalKeys`
+    [ ((super, xK_Return), spawn "$(yeganesh -x)")
+    , ((super, xK_b), sendMessage ToggleStruts)
+    , ((super, xK_r), spawn format "pkill {0}; xmonad --restart" [statusBar])
     ]
+
+super = mod4Mask
+terminal = "kitty"
+statusBar = "xmobar"

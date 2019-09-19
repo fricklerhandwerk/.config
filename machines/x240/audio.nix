@@ -9,8 +9,8 @@ with config;
     enable = true;
     user.bindings = let audio = "${pkgs.pulseaudio-ctl}/bin/pulseaudio-ctl"; in [
       { keys = [113]; events = ["key"]; command = "${audio} mute"; }
-      { keys = [114]; events = ["key"]; command = "${audio} mute no && ${audio} down"; }
-      { keys = [115]; events = ["key"]; command = "${audio} mute no && ${audio} up"; }
+      { keys = [114]; events = ["key"]; command = "${audio} mute no && ${audio} down 10"; }
+      { keys = [115]; events = ["key"]; command = "${audio} mute no && ${audio} up 10"; }
       { keys = [190]; events = ["key"]; command = "${audio} mute-input"; }
     ];
   };

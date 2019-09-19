@@ -5,19 +5,23 @@
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      extraPackages = haskellPackages: with haskellPackages; [
+        text-format-simple
+      ];
       config = ./xmonad.hs;
     };
     initExtra = ''
       ${pkgs.xorg.xsetroot}/bin/xsetroot -solid '#404040'
     '';
   };
-  home.packages = with pkgs; [
+  home.packages = with pkgs;
+  let haskell = haskellPackages;
+  in[
     dmenu
     kitty
-    haskellPackages.yeganesh
-    dzen2
-    conky
+    haskell.yeganesh
+    haskell.xmobar
+    font-awesome_5
   ];
-  fonts.fontconfig.enableProfileFonts = true;
   xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
 }
