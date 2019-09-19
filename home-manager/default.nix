@@ -8,6 +8,7 @@ with pkgs;
     ./modules/fish.nix
     ./modules/ssh.nix
     ./modules/git.nix
+    ./modules/wine.nix
   ];
 
   home.packages = [

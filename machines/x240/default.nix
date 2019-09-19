@@ -28,4 +28,5 @@ in
     xkbOptions = "altwin:swap_lalt_lwin";
   };
   i18n.consoleUseXkbConfig = true;
+  hardware.opengl.driSupport32Bit = true;
 }
