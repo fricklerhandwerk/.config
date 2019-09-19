@@ -22,7 +22,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 - nixpkgs: user-actkbd (fix pulseaudio)
 - nixos-hardware: add declarative option to README
-- nixos: fix NetworkManager rename on 18.09 (backport from `staging`)
 
 ## home config
 
@@ -31,11 +30,10 @@ Primary objective is to fully replace my macOS installations and the occasional 
 - mail
 - lock all logged-in sessions for a user on lid close
   - `phsylock` for terminal, `xsecurelock` for X
-- terminal font scaling key commands
+- iPhone backup/sync
 
 ## machine config
 
-- wait for `network-online` on 19.03
 - hardware-configuration under version control
 - hard disk formatting as part of installation script
 - add system closure to installation image (reduce time to first boot)
@@ -55,9 +53,10 @@ Primary objective is to fully replace my macOS installations and the occasional 
 
 ## nice to have
 
+- custom xmobar icon pattern for battery status
+- restart xmobar on wakeup
 - custom greeter
 - switch user on lock screen
-- create minimal python package
 - create minimal blog
 - create minimal game with graphics (try godot engine)
 
