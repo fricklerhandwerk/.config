@@ -35,39 +35,64 @@ in
   };
   config = {
     # run get user configuration on startup
-    systemd.services = mkIf (users != {}) (mapAttrs' (user: cfg:
-      nameValuePair ("home-config-${utils.escapeSystemdPath user}") {
-        description = "initial home-manager configuration for ${user}";
+    systemd.services = mkIf (users != {}) (
+      let
+        initialise = user: "home-config-init-${utils.escapeSystemdPath user}";
+        check = user: "home-config-check-${utils.escapeSystemdPath user}";
+        service = unit: "${unit}.service";
+        git = "${pkgs.git}/bin/git";
+      in
+      mapAttrs' (user: cfg: nameValuePair (check user) {
+        description = "check home configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
-        # do not allow login before setup is finished. after first boot the
-        # process takes a long time, and the user would log into a broken
-        # environment. let display manager wait in graphical setups.
-        before = [ "systemd-user-sessions.service" ] ++ optional config.services.xserver.enable "display-manager.service";
-        after = [ "nix-daemon.socket" "network-online.target" ];
-        requires = [ "nix-daemon.socket" "network-online.target" ];
+        onFailure = [ (service (initialise user)) ];
         serviceConfig = {
           User = user;
           Type = "oneshot";
-          SyslogIdentifier = "home-config-${user}";
-          ExecStart = let
-            git = "${pkgs.git}/bin/git";
-            home-manager = "${pkgs.home-manager}/bin/home-manager";
-          in
-            writeScript "home-config-${user}"
+          SyslogIdentifier = check user;
+          ExecStart = writeScript (check user)
             ''
               #! ${stdenv.shell} -el
               mkdir -p $HOME/${cfg.path}
               cd $HOME/${cfg.path}
               ${git} init
-              ${git} remote add origin ${cfg.repo} \
-                || { echo "keep existing repository state"; exit 0; }
+              if ${git} remote add origin ${cfg.repo}
+              # flip return code
+              then
+                echo home-config not initialised
+                exit 128
+              else
+                exit 0
+              fi
+            '';
+        };
+      }) users //
+      mapAttrs' (user: cfg: nameValuePair (initialise user) {
+        description = "initialise home-manager configuration for ${user}";
+        # do not allow login before setup is finished. after first boot the
+        # process takes a long time, and the user would log into a broken
+        # environment.
+        # let display manager wait in graphical setups.
+        before = [ "systemd-user-sessions.service" ] ++ optional config.services.xserver.enable "display-manager.service";
+        # `nix-daemon` and `network-online` are required under the assumption
+        # that installation performs `nix` operations and those usually need to
+        # fetch remote data
+        after = [ "nix-daemon.socket" "network-online.target" ];
+        requires = [ "nix-daemon.socket" "network-online.target" ];
+        serviceConfig = {
+          User = user;
+          Type = "oneshot";
+          SyslogIdentifier = initialise user;
+          ExecStart = writeScript (initialise user)
+            ''
+              #! ${stdenv.shell} -el
+              cd $HOME/${cfg.path}
               ${git} fetch
               ${git} checkout ${cfg.branch} --force
               $HOME/${cfg.path}/${cfg.install}
             '';
         };
-      }
-    ) users);
+      }) users);
 
     # this is a user-specific requirement, but needs to be supported by the
     # system for fully-automatic bootstrapping *before* first login. not sure
