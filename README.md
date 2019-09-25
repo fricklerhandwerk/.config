@@ -48,7 +48,6 @@ Primary objective is to fully replace my macOS installations and the occasional 
 - add home server to machine pool
 - add remote server to machine pool
 - manage machines with NixOps
-- limit systemd service shutdown wait time
 - limit grub screen wait time
 
 ## nice to have

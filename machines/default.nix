@@ -36,4 +36,8 @@ with config;
     repo = https://github.com/fricklerhandwerk/.config;
     install = "home-manager/install ${networking.hostName}";
   };
+ 
+  systemd.extraConfig = ''
+    DefaultTimeoutStopSec=5s
+  '';
 }
