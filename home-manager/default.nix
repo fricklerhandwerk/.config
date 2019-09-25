@@ -9,6 +9,7 @@ with pkgs;
     ./modules/ssh.nix
     ./modules/git.nix
     ./modules/wine.nix
+    ./modules/zip.nix
   ];
 
   home.packages = [
