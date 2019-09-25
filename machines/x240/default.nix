@@ -19,14 +19,22 @@ in
   networking.hostName = "x240";
   time.timeZone = "Europe/Berlin";
 
-  boot.loader = {
-    timeout = 1;
-    systemd-boot = {
-      enable = true;
-      consoleMode = "max";
-      editor = false;
+  boot = {
+    plymouth.enable = true;
+    loader = {
+      timeout = 1;
+      efi.canTouchEfiVariables = true;
+      grub = {
+        enable = true;
+        efiSupport = true;
+        device = "nodev";
+        extraConfig = ''
+          set timeout_style=hidden
+        '';
+        # an image is drawn even if the menu is skipped
+        splashImage = null;
+      };
     };
-    efi.canTouchEfiVariables = true;
   };
 
   services.xserver = {
