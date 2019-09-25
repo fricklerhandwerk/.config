@@ -42,7 +42,7 @@ in
         # do not allow login before setup is finished. after first boot the
         # process takes a long time, and the user would log into a broken
         # environment. let display manager wait in graphical setups.
-        before = [ "systemd-user-sessions.service" ] ++ optional config.services.xserver.enable "display-manager-service";
+        before = [ "systemd-user-sessions.service" ] ++ optional config.services.xserver.enable "display-manager.service";
         after = [ "nix-daemon.socket" "network-online.target" ];
         requires = [ "nix-daemon.socket" "network-online.target" ];
         serviceConfig = {
