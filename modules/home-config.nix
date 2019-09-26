@@ -45,7 +45,6 @@ in
       mapAttrs' (user: cfg: nameValuePair (check user) {
         description = "check home configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
-        onFailure = [ (service (initialise user)) ];
         serviceConfig = {
           User = user;
           Type = "oneshot";
@@ -56,14 +55,7 @@ in
               mkdir -p $HOME/${cfg.path}
               cd $HOME/${cfg.path}
               ${git} init
-              if ${git} remote add origin ${cfg.repo}
-              # flip return code
-              then
-                echo home-config not initialised
-                exit 128
-              else
-                exit 0
-              fi
+              ${git} remote add origin ${cfg.repo}
             '';
         };
       }) users //
@@ -77,8 +69,8 @@ in
         # `nix-daemon` and `network-online` are required under the assumption
         # that installation performs `nix` operations and those usually need to
         # fetch remote data
-        after = [ "nix-daemon.socket" "network-online.target" ];
-        requires = [ "nix-daemon.socket" "network-online.target" ];
+        after = [ (service (check user)) "nix-daemon.socket" "network-online.target" ];
+        requires = [ (service (check user)) "nix-daemon.socket" "network-online.target" ];
         serviceConfig = {
           User = user;
           Type = "oneshot";
