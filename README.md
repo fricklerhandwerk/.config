@@ -6,13 +6,15 @@ To set up a fresh machine, create an installation image on a system running `nix
     > /nix/store/.../nixos-iso
     sudo dd if=/nix/store/.../nixos-iso/iso/nixos.iso of=/dev/sdX
 
-Boot from USB, format an installation partition `/dev/sdXn` and run
+Boot from USB, format an installation partition [1] `/dev/sdXn` and run
 
     mount /dev/sdXn /mnt
     nix-shell -p git --run "git clone https://github.com/fricklerhandwerk/.config"
     .config/install <machine>
 
 After rebooting a user logging in should have its `home-manager` configuration active as specified in the `home-config` option.
+
+[1]: Gentoo has a very extensive [manual](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks#Default:_Using_parted_to_partition_the_disk) to partitioning and formatting. I prefer their GPT partition layout over that from the [NixOS manual](https://nixos.org/nixos/manual/index.html#sec-installation-partitioning) as it allows easy switching of configurations both bootable on BIOS and UEFI systems.
 
 # goals
 
@@ -35,7 +37,7 @@ Primary objective is to fully replace my macOS installations and the occasional 
 ## machine config
 
 - hardware-configuration under version control
-- hard disk formatting as part of installation script
+- hard disk partitioning/formatting as part of installation script
 - add system closure to installation image (reduce time to first boot)
 - include `home-manager` packages in installation image (reduce time to first login)
 - include secrets in installation image
