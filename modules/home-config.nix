@@ -8,7 +8,7 @@ in
 {
   options = {
     home-config.users = mkOption {
-      description = "per-user home config repository";
+      description = "user's home config repository";
       type = types.attrsOf (types.submodule {
         options = {
           repo = mkOption {
@@ -41,22 +41,25 @@ in
         check = user: "home-config-check-${utils.escapeSystemdPath user}";
         service = unit: "${unit}.service";
         git = "${pkgs.git}/bin/git";
+        home = user: config.users.users.${user}.home;
       in
       mapAttrs' (user: cfg: nameValuePair (check user) {
         description = "check home configuration for ${user}";
         wantedBy = [ "multi-user.target" ];
+        unitConfig = {
+          # path must be absolute!
+          # <https://www.freedesktop.org/software/systemd/man/systemd.unit.html#ConditionArchitecture=>
+          ConditionPathExists = "${home user}/${cfg.path}/.git";
+        };
         serviceConfig = {
           User = user;
-          Type = "oneshot";
           SyslogIdentifier = check user;
-          ExecStart = writeScript (check user)
-            ''
-              #! ${stdenv.shell} -el
-              mkdir -p $HOME/${cfg.path}
-              cd $HOME/${cfg.path}
-              ${git} init
-              ${git} remote add origin ${cfg.repo}
-            '';
+          # systemd docs say that not specifying `Type` and `ExecStart` implies
+          # `Type=oneshot`, but in reality it still complains if `ExecStart` is
+          # not defined, even if `Type=oneshot` is explicitly set.
+          # <https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=>
+          Type = "oneshot";
+          ExecStart = "${coreutils}/bin/true";
         };
       }) users //
       mapAttrs' (user: cfg: nameValuePair (initialise user) {
@@ -78,10 +81,13 @@ in
           ExecStart = writeScript (initialise user)
             ''
               #! ${stdenv.shell} -el
-              cd $HOME/${cfg.path}
+              mkdir -p ${home user}/${cfg.path}
+              cd ${home user}/${cfg.path}
+              ${git} init
+              ${git} remote add origin ${cfg.repo}
               ${git} fetch
               ${git} checkout ${cfg.branch} --force
-              $HOME/${cfg.path}/${cfg.install}
+              ${home user}/${cfg.path}/${cfg.install}
             '';
         };
       }) users);
