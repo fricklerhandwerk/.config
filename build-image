@@ -1,5 +1,0 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i fish -p fish -p git
-
-set current (dirname (readlink -f (status -f)))
-nix-build $current/machines/iso.nix --max-jobs auto --cores (nproc)
