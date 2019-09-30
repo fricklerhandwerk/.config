@@ -1,57 +1,24 @@
 # .config
 
-To set up a fresh machine, create an installation image on a system running `nix` and copy it to a USB stick:
+On a machine with `nix` run
 
-    ./build-image
-    > /nix/store/.../nixos-iso
-    sudo dd if=/nix/store/.../nixos-iso/iso/nixos.iso of=/dev/sdX
+  ./install <machine>
 
-Boot from USB, format an installation partition [1] `/dev/sdXn` and run
-
-    mount /dev/sdXn /mnt
-    nix-shell -p git --run "git clone https://github.com/fricklerhandwerk/.config"
-    .config/install <machine>
-
-After rebooting a user logging in should have its `home-manager` configuration active as specified in the `home-config` option.
-
-[1]: Gentoo has a very extensive [manual](https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Disks#Default:_Using_parted_to_partition_the_disk) to partitioning and formatting. I prefer their GPT partition layout over that from the [NixOS manual](https://nixos.org/nixos/manual/index.html#sec-installation-partitioning) as it allows easy switching of configurations both bootable on BIOS and UEFI systems.
+to set up its respective home-manager configuration.
 
 # goals
 
-Primary objective is to fully replace my macOS installations and the occasional Ubuntu with a fully reproducible NixOS.
+Primary objective is to configure all my userspace software through `home-manager` on both NixOS and macOS - replacing `homebrew`.
 
-## PRs
-
-- nixpkgs: user-actkbd (fix pulseaudio)
-- nixos-hardware: add declarative option to README
-
-## home config
+## to do
 
 - pin nixpkgs version
-- slimmer interface to home-config (extend `user.users`)
 - continuous backup to network storage (and retrieval)
 - mail
 - lock all logged-in sessions for a user on lid close
-  - `phsylock` for terminal, `xsecurelock` for X
+  - `phsylock` for terminal, `xsecurelock` for `X`
 - iPhone backup/sync
-
-## machine config
-
-- hardware-configuration under version control
-- pin nixpkgs version
-- hard disk partitioning/formatting as part of installation script
-- add system closure to installation image (reduce time to first boot)
-- include `home-manager` packages in installation image (reduce time to first login)
-- include secrets in installation image
-- full machine image from configuration (`dd` to target disk and run)
-- separate repositories for machine and user config
-- notify on low battery
-- hibernate on critical battery
-- hibernate after suspend
-- encrypted system partition
-- add home server to machine pool
-- add remote server to machine pool
-- manage machines with NixOps
+- export `osxkeychain` passwords to `pass`
 
 ## nice to have
 

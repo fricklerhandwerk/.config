@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../..
+    ../.
     ./desktop-environment
     ./secrets.nix
     ./udiskie.nix

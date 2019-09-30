@@ -2,14 +2,14 @@
 with pkgs;
 {
   imports = [
-    ./modules/unstable.nix
-    ./modules/machine.nix
-    ./modules/nvim
-    ./modules/fish.nix
-    ./modules/ssh.nix
-    ./modules/git.nix
-    ./modules/wine.nix
-    ./modules/zip.nix
+    ./unstable.nix
+    ./machine.nix
+    ./nvim
+    ./fish.nix
+    ./ssh.nix
+    ./git.nix
+    ./wine.nix
+    ./zip.nix
   ];
 
   home.packages = [
