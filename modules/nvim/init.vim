@@ -69,6 +69,6 @@ nnoremap j gj
 nnoremap k gk
 nnoremap 0 g0
 nnoremap $ g$
-" TODO: fix edge cases
+" TODO: fix movement on wrapped lines also in visual mode
 
 " TODO: simplify split movement
