@@ -13,6 +13,7 @@ Primary objective is to configure all my userspace software through `home-manage
 ## to do
 
 - pin nixpkgs version
+- rewrite secret setup as user services
 - continuous backup to network storage (and retrieval)
 - mail
 - lock all logged-in sessions for a user on lid close

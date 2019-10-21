@@ -5,7 +5,7 @@
     matchBlocks = {
       github = {
         host = "github.com";
-        identityFile = "${config.home.homeDirectory}/.ssh/id_rsa_github";
+        identityFile = "${config.home.homeDirectory}/.ssh/github";
       };
     };
     extraConfig = ''

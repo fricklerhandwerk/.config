@@ -1,9 +1,10 @@
-{ pkgs, lib, ... }:
-with import <home-manager/modules/lib/dag.nix> {inherit lib;};
+{ config, pkgs, ... }:
 let
+  # TODO: use WWN if possible (probably needs a more modern USB stick)
   device-id = "5FA0-D2A4";
   secrets = "$HOME/.config/secrets";
 in
+with config.lib;
 {
   home.packages = with pkgs; [
     pass
@@ -11,8 +12,17 @@ in
   ];
   services.gpg-agent.enable = true;
 
+  # TODO: maybe all of these should be user services instead, which depend on
+  # their target files not existing. right now there is this weird indirection
+  # via a de-facto temporary file. the problem with user services is just that
+  # their failure won't fail a build, and it is a bit more work to retrigger
+  # them when needed. on the other hand presence of secrets should not
+  # determine build success, they are really just state. the first boot will
+  # simply fail if something goes wrong and there is little one can do except
+  # plugging in the external storage if it was forgotten.
+
   # get secrets in place
-  home.activation.copySecrets = dagEntryAfter ["writeBoundary"] ''
+  home.activation.copySecrets = dag.entryAfter ["writeBoundary"] ''
     if [[ ! -d ${secrets} ]]; then
       dev=$(blkid -U ${device-id})
       if [[ -z $dev ]]; then
@@ -21,6 +31,7 @@ in
       fi
       mnt=$(lsblk -no MOUNTPOINT $dev)
       if [[ -z $mnt ]]; then
+        # TODO: just use `blkid` again...
         # "mounted <DBus device> on <mountpoint>"
         msg=$(${pkgs.udiskie}/bin/udiskie-mount $dev)
         mnt=$(echo $msg | rev | cut -d' ' -f1 | rev)
@@ -34,19 +45,18 @@ in
       umount $mnt
     fi
   '';
-  home.activation.gpgKeys = dagEntryAfter ["copySecrets"] ''
-    ${pkgs.gnupg}/bin/gpg --import ${secrets}/gpg/AE02F55D.asc
+  home.activation.gpgKeys = dag.entryAfter ["copySecrets"] ''
+    # TODO: if import fails, try `--batch`
+    ${pkgs.gnupg}/bin/gpg --import ${secrets}/gpg.asc
   '';
-  home.activation.sshKeys = dagEntryAfter ["copySecrets"] ''
-    install -D -m600 ${secrets}/ssh/id_rsa_github $HOME/.ssh/id_rsa_github
+  home.activation.sshKeys = dag.entryAfter ["copySecrets"] ''
+    install -D -m600 ${secrets}/ssh/github* $HOME/.ssh/
+    install -D -m600 ${secrets}/ssh/una* $HOME/.ssh/
   '';
-  # TODO: fetch `.password-store` from a private git repo to be able to keep it
-  # up to date. PGP and SSH keys (assuming we are not using gpg-agent for SSH
-  # authentication) should be the only secrets to copy. not sure yet whether it
-  # is a good idea to have so many repositories, but so far machines, user
-  # config and secrets are three independent concepts where it makes sense to
-  # keep separate histories for.
-  home.activation.passwords = dagEntryAfter ["copySecrets"] ''
+  # TODO: fetch `.password-store` from a private git repo. do this in a user
+  # service, as it will prompt for GPG key password, for which we need to be
+  # logged in - home environment build happens before first login.
+  home.activation.passwords = dag.entryAfter ["copySecrets"] ''
     cp -RT ${secrets}/password-store $HOME/.password-store
     chmod -R u=rwx,g=,o= $HOME/.password-store
   '';
