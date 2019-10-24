@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-with pkgs;
+{ pkgs, ... }:
 {
   imports = [
     ./unstable.nix
@@ -12,7 +11,11 @@ with pkgs;
     ./zip.nix
   ];
 
-  home.packages = [
+  home.packages = with pkgs;
+  let
+    tor-browser = unstable.tor-browser-bundle-bin.override
+      { mediaSupport = true; };
+  in [
     ripgrep
     git
     gitAndTools.hub
@@ -20,7 +23,7 @@ with pkgs;
     qutebrowser
     ranger
     vlc
-    (unstable.tor-browser-bundle-bin.override { mediaSupport = true; })
+    tor-browser
   ];
   home.sessionVariables = {
     EDITOR = "nvim";

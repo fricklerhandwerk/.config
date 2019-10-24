@@ -4,16 +4,9 @@
 with pkgs;
 with lib;
 let
-  home-manager = callPackage ./home-manager.nix {};
-  wrapper = {path}: (symlinkJoin {
-    name = "home-manager";
-    paths = [
-      (writeShellScriptBin "home-manager" ''
-        exec ${home-manager}/bin/home-manager -f ${toString path} $@
-       '')
-      home-manager
-    ];
-  });
+  home-manager = writeShellScriptBin "home-manager" ''
+    exec ${callPackage ./home-manager.nix {}}/bin/home-manager -f ${toString config.machine} $@
+  '';
 in
 {
   options = {
@@ -23,6 +16,6 @@ in
     };
   };
   config = {
-    home.packages = [ (wrapper { path = config.machine; }) ];
+    home.packages = [ home-manager ];
   };
 }
