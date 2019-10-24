@@ -46,8 +46,7 @@ with config.lib;
     fi
   '';
   home.activation.gpgKeys = dag.entryAfter ["copySecrets"] ''
-    # TODO: if import fails, try `--batch`
-    ${pkgs.gnupg}/bin/gpg --import ${secrets}/gpg.asc
+    ${pkgs.gnupg}/bin/gpg --batch --import ${secrets}/gpg.asc
   '';
   home.activation.sshKeys = dag.entryAfter ["copySecrets"] ''
     install -D -m600 ${secrets}/ssh/github* $HOME/.ssh/
