@@ -2,12 +2,15 @@
 let
   # TODO: use WWN if possible (probably needs a more modern USB stick)
   device-id = "5FA0-D2A4";
-  secrets = "$HOME/.config/secrets";
+  secrets = "${config.home.homeDirectory}/.config/secrets";
+  env = config.home.sessionVariables;
 in
 with config.lib;
 {
+  home.sessionVariables = {
+    GNUPGHOME = "${env.XDG_DATA_HOME}/gnupg";
+  };
   home.packages = with pkgs; [
-    pass
     gnupg
   ];
   services.gpg-agent.enable = true;
@@ -46,6 +49,7 @@ with config.lib;
     fi
   '';
   home.activation.gpgKeys = dag.entryAfter ["copySecrets"] ''
+    mkdir -p ${env.GNUPGHOME}
     ${pkgs.gnupg}/bin/gpg --batch --import ${secrets}/gpg.asc
   '';
   home.activation.sshKeys = dag.entryAfter ["copySecrets"] ''
@@ -56,7 +60,7 @@ with config.lib;
   # service, as it will prompt for GPG key password, for which we need to be
   # logged in - home environment build happens before first login.
   home.activation.passwords = dag.entryAfter ["copySecrets"] ''
-    cp -RT ${secrets}/password-store $HOME/.password-store
-    chmod -R u=rwx,g=,o= $HOME/.password-store
+    cp -RT ${secrets}/password-store ${env.PASSWORD_STORE_DIR}
+    chmod -R u=rwx,g=,o= ${env.PASSWORD_STORE_DIR}
   '';
 }

@@ -1,12 +1,13 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
-    ./unstable.nix
+    ./fish.nix
+    ./git.nix
     ./machine.nix
     ./nvim
-    ./fish.nix
+    ./pass.nix
     ./ssh.nix
-    ./git.nix
+    ./unstable.nix
     ./wine.nix
     ./zip.nix
   ];
@@ -25,7 +26,13 @@
     vlc
     tor-browser
   ];
-  home.sessionVariables = {
+  home.sessionVariables =
+  let
+    home = config.home.homeDirectory;
+  in
+  {
     EDITOR = "nvim";
+    XDG_CONFIG_HOME = "${home}/.config";
+    XDG_DATA_HOME = "${home}/.local/share";
   };
 }
