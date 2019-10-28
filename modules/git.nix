@@ -25,7 +25,7 @@ in
       };
       merge = {
         tool = "nvim";
-	ff = false;
+        ff = false;
       };
       "mergetool \"nvim\"".cmd = "nvim -f -c \"Gdiff\" \"$MERGED\"";
     };
