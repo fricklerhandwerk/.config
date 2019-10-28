@@ -1,19 +1,18 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i fish -p fish
+#! nix-shell -i bash -p bash -p coreutils -p nix
 
-set self (status current-filename)
-set current (dirname (readlink --canonicalize-existing $self))
+current=$(dirname $(readlink --canonicalize-existing $0))
 
-if not test -d $machines/$argv[1]
+if [[ -z $1 || ! -d $current/machines/$1 ]]; then
   echo "specify a machine:" >&2
-  for i in (ls -d $machines/*/)
-    echo (basename $i) >&2
-  end
+  for i in $(ls -d $current/machines/*); do
+    echo $(basename $i) >&2
+  done
   exit 1
-end
+fi
 
-set cfg $current/machines/$machine
+machine=$current/machines/$1
 
 nix-shell -E \
 "with import <nixpkgs> {}; mkShell { buildInputs = [ (callPackage $current/modules/home-manager.nix {}) ]; }" \
---run "home-manager -f $cfg switch"
+--run "home-manager -f $machine switch"
