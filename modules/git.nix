@@ -32,6 +32,7 @@ in
     ignores = [ ".DS_Store" ];
   };
   home.packages = with pkgs; [
+    gitAndTools.hub
     gitAndTools.gitRemoteGcrypt
   ];
 }

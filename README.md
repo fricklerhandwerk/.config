@@ -30,6 +30,10 @@ Primary objective is to configure all my userspace software through `home-manage
 - create minimal blog
 - create minimal game with graphics (try godot engine)
 
+## ideas for contributions
+
+- darwin packages: vlc, tor-browser-bundle-bin, qutebrowser, wineWow
+
 # prior art
 
 so far served as the main reference on how to use nixos and home-manager:
