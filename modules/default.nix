@@ -26,13 +26,7 @@
     vlc
     tor-browser
   ];
-  home.sessionVariables =
-  let
-    home = config.home.homeDirectory;
-  in
-  {
+  home.sessionVariables = {
     EDITOR = "nvim";
-    XDG_CONFIG_HOME = "${home}/.config";
-    XDG_DATA_HOME = "${home}/.local/share";
   };
 }

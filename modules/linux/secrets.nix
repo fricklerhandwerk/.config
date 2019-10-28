@@ -2,13 +2,13 @@
 let
   # TODO: use WWN if possible (probably needs a more modern USB stick)
   device-id = "5FA0-D2A4";
-  secrets = "${config.home.homeDirectory}/.config/secrets";
+  secrets = "${config.xdg.configHome}/secrets";
   env = config.home.sessionVariables;
 in
 with config.lib;
 {
   home.sessionVariables = {
-    GNUPGHOME = "${env.XDG_DATA_HOME}/gnupg";
+    GNUPGHOME = "${config.xdg.dataHome}/gnupg";
   };
   home.packages = with pkgs; [
     gnupg
