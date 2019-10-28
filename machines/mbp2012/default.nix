@@ -1,0 +1,8 @@
+{ pkgs, ... }:
+{
+  imports = [
+    ../../modules
+  ];
+
+  machine = ./.;
+}
