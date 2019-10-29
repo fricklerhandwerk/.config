@@ -6,7 +6,7 @@
     vimAlias = true;
     configure = {
       customRC = "${builtins.readFile ./init.vim}";
-      packages.vam = with pkgs.vimPlugins;
+      packages.plugins = with pkgs.vimPlugins;
         let unstable = pkgs.unstable.vimPlugins; in {
         start = [
           unstable.vim-fish
