@@ -4,6 +4,8 @@ set termguicolors
 colorscheme NeoSolarized
 set background=dark
 
+set hidden
+
 let mapleader=","
 let maplocalleader=","
 
@@ -12,9 +14,8 @@ set clipboard=unnamed
 set clipboard=unnamedplus
 
 " detect file type for plugins and indentation
-filetype on
-filetype plugin on
-filetype indent on
+filetype plugin indent on
+syntax enable
 
 " do not display mode line
 set nomodeline
@@ -72,3 +73,27 @@ nnoremap $ g$
 " TODO: fix movement on wrapped lines also in visual mode
 
 " TODO: simplify split movement
+
+" auto completion
+let g:deoplete#enable_at_startup = 1
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+
+inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
+
+" IDE
+let g:LanguageClient_serverCommands = { 'python': ['pyls'] }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent>gt :call LanguageClient#textDocument_typeDefinition()<CR>
+nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
+nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <silent> gf :call LanguageClient_textDocument_formatting()<CR>
+
+" go back
+nnoremap gb <C-o>
