@@ -10,11 +10,13 @@
       gdc = "git diff --cached";
       ga = "git add";
       gc = "git commit";
-      gr = "git rebase -i";
+      gr = "git rebase";
+      gri = "git rebase -i";
       grc = "git rebase --continue";
       gra = "git rebase --abort";
       gm = "git mergetool";
       gpl = "git pull";
+      gpr = "git pull --rebase";
       gf = "git fetch";
       gfr = "git fetch; and git rebase";
       gp = "git push";
