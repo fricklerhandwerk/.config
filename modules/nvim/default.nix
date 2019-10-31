@@ -6,9 +6,18 @@
     vimAlias = true;
     extraConfig = "${builtins.readFile ./init.vim}";
     plugins =
-      with pkgs.vimPlugins;
+      with pkgs;
+      with vimPlugins;
       let
         unstable = pkgs.unstable.vimPlugins;
+        incsearch-fuzzy = vimUtils.buildVimPlugin {
+          pname = "incsearch-fuzzy";
+          version = "2016-12-15";
+          src = fetchGit {
+            url = "https://github.com/haya14busa/incsearch-fuzzy.vim";
+            ref = "master";
+          };
+        };
       in
       [
         unstable.vim-fish
@@ -24,6 +33,10 @@
         ultisnips
         vim-snippets
         deoplete-nvim
+        easymotion
+        incsearch-vim
+        incsearch-fuzzy
+        incsearch-easymotion-vim
         echodoc
         vim-airline
         vim-airline-themes

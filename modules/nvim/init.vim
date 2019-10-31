@@ -48,6 +48,7 @@ set visualbell
 set cursorline
 
 " search settings
+set hlsearch
 set ignorecase
 set smartcase
 set gdefault
@@ -59,10 +60,10 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " toggle search highlight
-nmap <silent><leader>h :set hls!<CR>
+nmap <silent>H :set hls!<CR>
 
 " toggle invisible characters
-nmap <silent><leader>l :set list!<CR>
+nmap <silent>L :set list!<CR>
 set listchars=tab:▸\ ,eol:¬
 
 " fix movement on wrapped lines
@@ -74,6 +75,48 @@ nnoremap $ g$
 
 " TODO: simplify split movement
 
+" easy motion
+" prefix
+map <Leader> <Plug>(easymotion-prefix)
+
+" search
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+map  n <Plug>(easymotion-next)
+map  N <Plug>(easymotion-prev)
+
+" fuzzy search
+function! s:config_easyfuzzymotion(...) abort
+  return extend(copy({
+  \   'converters': [incsearch#config#fuzzyword#converter()],
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+  \   'is_expr': 0,
+  \   'is_stay': 1
+  \ }), get(a:, 1, {}))
+endfunction
+
+noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
+
+" move to character
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+" enhance hjkl
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 " auto completion
 let g:deoplete#enable_at_startup = 1
 let g:UltiSnipsExpandTrigger='<tab>'
