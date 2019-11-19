@@ -38,6 +38,7 @@
         incsearch-fuzzy
         incsearch-easymotion-vim
         echodoc
+        vim-jinja
         vim-airline
         vim-airline-themes
         unstable.NeoSolarized
