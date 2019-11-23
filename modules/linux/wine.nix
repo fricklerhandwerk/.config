@@ -15,5 +15,6 @@ in
 {
   home.packages = [
     wine
+    winetricks
   ];
 }
