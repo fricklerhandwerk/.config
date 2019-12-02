@@ -13,6 +13,7 @@ Primary objective is to configure all my userspace software through `home-manage
 ## PRs
 
 - git-remote-gcrypt: fail loudly on any error in `gitception_get`
+- home-manager: add systemd mount/automount
 
 ## to do
 
