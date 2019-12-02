@@ -10,6 +10,10 @@ to set up its respective home-manager configuration.
 
 Primary objective is to configure all my userspace software through `home-manager` on both NixOS and macOS - replacing `homebrew`.
 
+## PRs
+
+- git-remote-gcrypt: fail loudly on any error in `gitception_get`
+
 ## to do
 
 - pin nixpkgs version

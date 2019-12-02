@@ -6,11 +6,12 @@ let
   env = config.home.sessionVariables;
 in
 with config.lib;
+with pkgs;
 {
   home.sessionVariables = {
     GNUPGHOME = "${config.xdg.dataHome}/gnupg";
   };
-  home.packages = with pkgs; [
+  home.packages = [
     gnupg
   ];
   services.gpg-agent.enable = true;
@@ -36,7 +37,7 @@ with config.lib;
       if [[ -z $mnt ]]; then
         # TODO: just use `blkid` again...
         # "mounted <DBus device> on <mountpoint>"
-        msg=$(${pkgs.udiskie}/bin/udiskie-mount $dev)
+        msg=$(${udiskie}/bin/udiskie-mount $dev)
         mnt=$(echo $msg | rev | cut -d' ' -f1 | rev)
       fi
       if [[ ! -d $(realpath $mnt) ]]; then
@@ -50,18 +51,11 @@ with config.lib;
   '';
   home.activation.gpgKeys = dag.entryAfter ["copySecrets"] ''
     mkdir -p ${env.GNUPGHOME}
-    ${pkgs.gnupg}/bin/gpg --batch --import ${secrets}/gpg.asc
+    ${gnupg}/bin/gpg --batch --import ${secrets}/gpg.asc
   '';
   home.activation.sshKeys = dag.entryAfter ["copySecrets"] ''
     install -D -m600 ${secrets}/ssh/github* $HOME/.ssh/
     install -D -m600 ${secrets}/ssh/una* $HOME/.ssh/
-  '';
-  # TODO: fetch `.password-store` from a private git repo. do this in a user
-  # service, as it will prompt for GPG key password, for which we need to be
-  # logged in - home environment build happens before first login.
-  home.activation.passwords = dag.entryAfter ["copySecrets"] ''
-    cp -RT ${secrets}/password-store ${env.PASSWORD_STORE_DIR}
-    chmod -R u=rwx,g=,o= ${env.PASSWORD_STORE_DIR}
   '';
 
   systemd.user.services.password-store = {
@@ -82,24 +76,22 @@ with config.lib;
 
     Service = {
       Type = "oneshot";
-      Environment = with pkgs; builtins.concatStringsSep " " [
+      Environment = builtins.concatStringsSep " " [
        "PATH=${lib.makeBinPath [ git gitAndTools.gitRemoteGcrypt coreutils ]}"
        "GNUPGHOME=${env.GNUPGHOME}"
       ];
       ExecStart = let
-        # TODO: `git clone` still fails here [1]. apparently internal `git
-        # fetch` fails, but since it is silenced with `-q` and the surrounding
-        # function returns 0 in this case there is no direct way to find out
-        # what exactly went wrong. this is a known issue [2]. have to replace
-        # `git-remote-gcrypt` with a fork which is more verbose. probably
-        # something is missing in this service's environment, as the problem
-        # does not come up in the regular shell.
-        # [1]: https://github.com/spwhitton/git-remote-gcrypt/blob/master/git-remote-gcrypt#L540
-        # [2]: https://github.com/spwhitton/git-remote-gcrypt/blob/master/README.rst#known-issues
-        script = pkgs.writeShellScriptBin "fetch-password-store" ''
-          mkdir -p ${env.PASSWORD_STORE_DIR}
-          git clone gcrypt::https://github.com/fricklerhandwerk/password-store ${env.PASSWORD_STORE_DIR}
-          cd ${env.PASSWORD_STORE_DIR}
+        script = writeShellScriptBin "fetch-password-store" ''
+          dir=${env.PASSWORD_STORE_DIR}
+          function cleanup { rm -rf $dir; }
+          trap cleanup ERR
+
+          mkdir -p $dir
+          # WARNING: this may still succeed even if `git-remote-gcrypt` fails
+          # to "find" the repository. see commit history for details.
+          git clone gcrypt::https://github.com/fricklerhandwerk/password-store $dir
+          chmod -R u=rwx,g=,o= $dir
+          cd $dir
           git remote set-url origin --push gcrypt::git@github.com:fricklerhandwerk/password-store
         ''; in "${script}/bin/fetch-password-store";
     };
