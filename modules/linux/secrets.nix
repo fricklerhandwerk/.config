@@ -9,14 +9,6 @@ let
   mount = "/run/media/${config.home.username}/${label}";
 in
 {
-  home.sessionVariables = {
-    GNUPGHOME = "${config.xdg.dataHome}/gnupg";
-  };
-  home.packages = [
-    gnupg
-  ];
-  services.gpg-agent.enable = true;
-
   # TODO: wrap in regular service for now. `home-manager` does not support
   # `mount` or `automount`
   # TODO: use `pkgs.writeShellScript` as soon as available in used version of `nixpkgs`

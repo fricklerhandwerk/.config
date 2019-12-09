@@ -3,6 +3,7 @@
   imports = [
     ./fish.nix
     ./git.nix
+    ./gpg.nix
     ./machine.nix
     ./nvim
     ./pass.nix
