@@ -1,12 +1,13 @@
 { config, lib, pkgs, ... }:
-let
-  # TODO: use WWN if possible (probably needs a more modern USB stick)
-  device-id = "5FA0-D2A4";
-  secrets = "${config.xdg.configHome}/secrets";
-  env = config.home.sessionVariables;
-in
-with config.lib;
+with builtins;
 with pkgs;
+let
+  env = config.home.sessionVariables;
+  partition = "usb-Intenso_Rainbow_Line_6E145441-0:0-part1";
+  label = "SECRETS";
+  device-id = "/dev/disk/by-id/${partition}";
+  mount = "/run/media/${config.home.username}/${label}";
+in
 {
   home.sessionVariables = {
     GNUPGHOME = "${config.xdg.dataHome}/gnupg";
@@ -18,36 +19,22 @@ with pkgs;
 
   # TODO: wrap in regular service for now. `home-manager` does not support
   # `mount` or `automount`
-  # TODO: specify mount location for use in other units
   # TODO: use `pkgs.writeShellScript` as soon as available in used version of `nixpkgs`
-  home.activation.copySecrets = dag.entryAfter ["writeBoundary"] ''
-    if [[ ! -d ${secrets} ]]; then
-      dev=$(blkid -U ${device-id})
-      if [[ -z $dev ]]; then
-        echo "secret storage not attached"
-        exit 1
-      fi
-      mnt=$(lsblk -no MOUNTPOINT $dev)
-      if [[ -z $mnt ]]; then
-        # TODO: just use `blkid` again...
-        # "mounted <DBus device> on <mountpoint>"
-        msg=$(${udiskie}/bin/udiskie-mount $dev)
-        mnt=$(echo $msg | rev | cut -d' ' -f1 | rev)
-      fi
-      if [[ ! -d $(realpath $mnt) ]]; then
-        echo "could not mount secret storage"
-        exit 1
-      fi
-      cp -RT $mnt/secrets ${secrets}
-      chmod -R u=rwx,g=,o= ${secrets}
-      umount $mnt
-    fi
-  '';
+  systemd.user.services.mount-secrets = {
+    Unit = {
+      Description = "Mount secrets storage";
+      ConditionPathExists = "${device-id}";
+    };
+
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${udiskie}/bin/udiskie-mount ${device-id}";
+    };
+  };
 
   systemd.user.services.import-ssh-keys = {
     Unit = {
       Description = "Import SSH keys";
-      Before = [ "default.target" ];
       Wants = [ "mount-secrets.service" ];
       After = [ "mount-secrets.service" ];
     };
@@ -63,7 +50,7 @@ with pkgs;
       ];
     in {
       Type = "oneshot";
-      Environment = builtins.concatStringsSep " " [
+      Environment = concatStringsSep " " [
        "PATH=${lib.makeBinPath [ coreutils ]}"
       ];
       ExecCondition = let script = writeShellScriptBin "check-ssh-keys" ''
@@ -78,7 +65,7 @@ with pkgs;
         ''; in "${script}/bin/check-ssh-keys";
       ExecStart = let script = writeShellScriptBin "import-ssh-keys" ''
           set -e
-          for f in ${concatStringsSep " " (map (f: "${secrets}/ssh/${f}*") keys)}
+          for f in ${concatStringsSep " " (map (f: "${mount}/ssh/${f}*") keys)}
           do
             install -D -m600 "$f" $HOME/.ssh/
           done
@@ -89,7 +76,6 @@ with pkgs;
   systemd.user.services.import-gpg-keys = {
     Unit = {
       Description = "Import GPG keys";
-      Before = [ "default.target" ];
       Wants = [ "mount-secrets.service" ];
       After = [ "mount-secrets.service" ];
     };
@@ -104,8 +90,8 @@ with pkgs;
       ];
     in {
       Type = "oneshot";
-      Environment = builtins.concatStringsSep " " [
-       "PATH=${lib.makeBinPath [ gpg ]}"
+      Environment = concatStringsSep " " [
+       "PATH=${lib.makeBinPath [ gnupg ]}"
        "GNUPGHOME=${env.GNUPGHOME}"
       ];
       ExecCondition = let script = writeShellScriptBin "check-gpg-keys" ''
@@ -122,7 +108,7 @@ with pkgs;
           set -e
           for key in ${concatStringsSep " " keys}
           do
-            gpg --batch --import ${secrets}/$key.asc
+            gpg --batch --import ${mount}/gpg/$key.asc
           done
         ''; in "${script}/bin/import-gpg-keys";
     };
@@ -131,12 +117,11 @@ with pkgs;
   systemd.user.services.fetch-password-store = {
     Unit = {
       Description = "Fetch password store";
-      Before = [ "default.target" ];
       # XXX: the directory itself should be enough if we could detect failures
       # and clean up properly, but `git-remote-gcrypt` swallows the error that
       # might happen when internally re-fetching the repository, for reasons
       # I do not understand. therefore check against an artifact of successful
-      # decryption of the repository..
+      # decryption of the repository.
       ConditionPathExists = "!${env.PASSWORD_STORE_DIR}/.gpg-id";
       Requires = [ "import-gpg-keys.service" ];
       After = [ "import-gpg-keys.service" ];
@@ -148,7 +133,7 @@ with pkgs;
 
     Service = {
       Type = "oneshot";
-      Environment = builtins.concatStringsSep " " [
+      Environment = concatStringsSep " " [
        "PATH=${lib.makeBinPath [ git gitAndTools.gitRemoteGcrypt coreutils ]}"
        "GNUPGHOME=${env.GNUPGHOME}"
        "password_store=${env.PASSWORD_STORE_DIR}"
@@ -162,7 +147,7 @@ with pkgs;
           git remote set-url origin --push gcrypt::git@github.com:fricklerhandwerk/password-store
         ''; in "${script}/bin/fetch-password-store";
       ExecStopPost = let script = writeShellScriptBin "clean-password-store" ''
-          test $SERVICE_RESULT != "success"
+          if test $SERVICE_RESULT != "success"
           then
             rm -rf $password_store;
           fi
