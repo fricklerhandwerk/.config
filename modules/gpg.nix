@@ -1,7 +1,9 @@
 { config, pkgs, ... }:
 {
   home.sessionVariables = {
-    GNUPGHOME = "${config.xdg.dataHome}/gnupg";
+    # TODO: `GNUPGHOME` is not configurable yet, see
+    # <https://github.com/rycee/home-manager/pull/887>
+    GNUPGHOME = "${config.home.homeDirectory}/.gnupg";
   };
   home.packages = with pkgs; [
     gnupg
