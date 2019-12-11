@@ -22,6 +22,7 @@
     haskell.yeganesh
     haskell.xmobar
     font-awesome_5
+    ubuntu_font_family
   ];
   xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
 }

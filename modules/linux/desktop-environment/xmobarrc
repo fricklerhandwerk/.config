@@ -1,7 +1,7 @@
 Config
-  { font = "xft:UbuntuMono:size=10,Font Awesome 5 Free:style=Solid:size=10"
+  { font = "xft:UbuntuMono:size=11,Font Awesome 5 Free:style=Solid:size=9"
   -- correct for vertically off-center bar characters
-  , additionalFonts = ["xft:Ubuntu:size=10"], textOffsets = [15]
+  , additionalFonts = ["xft:Font Awesome 5:size=11"], textOffsets = [17]
   , bgColor = "#404040"
   , position = TopSize C 100 28
   , commands = [ Run DynNetwork [ "-t", "  <rx>  <tx>  "
