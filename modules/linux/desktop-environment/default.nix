@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./dunst.nix
+  ];
+
   xsession = {
     enable = true;
     windowManager.xmonad = {
@@ -16,7 +20,7 @@
   };
   home.packages = with pkgs;
   let haskell = haskellPackages;
-  in[
+  in [
     dmenu
     kitty
     haskell.yeganesh
