@@ -27,6 +27,7 @@
     haskell.xmobar
     font-awesome_5
     ubuntu_font_family
+    libnotify
   ];
   xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
 }

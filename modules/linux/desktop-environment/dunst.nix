@@ -14,7 +14,8 @@
         padding = 10;
         horizontal_padding = 10;
         markup = "full";
-        format = "%a\n%s\n%bfoobar";
+        format = "%s\n%b";
+        word_wrap = "yes";
         dmenu = "${pkgs.dmenu}/bin/dmenu";
         browser = "${pkgs.qutebrowser}/bin/qutebrowser";
         mouse_left_click = "do_action";

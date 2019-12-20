@@ -39,12 +39,13 @@ Config
                                              , "--", "--on", "", "--off", "", "--onc", "white"]
                , Run Date "%a. %Y-%m-%d %H:%M" "date" 20
                -- this can be made even more sleek with icon patterns for different power stati
-               , Run BatteryN ["BAT0"] ["-t", " <acstatus><left>% <timeleft>h", "--", "-O", "  ", "-i", "", "-o", ""] 20 "bat0"
-               , Run BatteryN ["BAT1"] ["-t", " <acstatus><left>% <timeleft>h", "--", "-O", "  ", "-i", "", "-o", ""] 20 "bat1"
+               , Run BatteryN ["BAT0"] ["-t", "<acstatus><left>%", "--", "-O", "  ", "-i", "", "-o", ""] 20 "bat0"
+               , Run BatteryN ["BAT1"] ["-t", "<acstatus><left>%", "--", "-O", "  ", "-i", "", "-o", ""] 20 "bat1"
+               , Run Battery ["-t", "<timeleft>h", "--", "-A", "5", "-a", "notify-send -u critical 'Battery low!'" ] 60
                ]
   , sepChar = "%"
   , alignSep = "}{"
   , template = " %multicpu% | %memory% %swap% | %disku% %diskio% |%dynnetwork%%wlp3s0wi% }\
-                \{ %alsa:default:Master% | %bat0% | %bat1% | %date% "
+                \{ %alsa:default:Master% | %bat0% %bat1% %battery% | %date% "
   }
 
