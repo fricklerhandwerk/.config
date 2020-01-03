@@ -1,6 +1,8 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i fish -p fish -p afpfs-ng -p fuse3
 
+# connect or disconnect AFP home server
+
 function mount
   # mount AFP server for given user, prompt for password
 

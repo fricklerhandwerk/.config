@@ -1,15 +1,13 @@
-{ config, pkgs, ... }:
+# common configuration for all machines
+{ pkgs, ... }:
 {
   imports = [
     ./fish.nix
     ./git.nix
-    ./gpg.nix
     ./machine.nix
     ./nvim
-    ./pass.nix
-    ./ssh.nix
-    ./unstable.nix
     ./zip.nix
+    ./unstable.nix
   ];
 
   home.packages = with pkgs; [
@@ -20,4 +18,5 @@
   home.sessionVariables = {
     EDITOR = "nvim";
   };
+  xdg.enable = true;
 }

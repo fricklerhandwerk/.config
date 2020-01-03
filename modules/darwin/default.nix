@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../.
+    ../workstation
   ];
 
   home.packages = with pkgs; [
