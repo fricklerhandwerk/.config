@@ -1,5 +1,4 @@
-# configuration for machines with human interface devices
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ../common

@@ -1,9 +1,8 @@
-# configuration for linux machines with human interface devices
 { pkgs, ... }:
 {
   imports = [
     ../.
-    ../../workstation
+    ../../terminal
     ./secrets.nix
     ./ssh-agent.nix
   ];

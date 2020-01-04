@@ -1,4 +1,3 @@
-# common configuration for all machines
 { pkgs, ... }:
 {
   imports = [

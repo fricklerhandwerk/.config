@@ -8,5 +8,5 @@
   home.packages = with pkgs; [
     gnupg
   ];
-  services.gpg-agent.enable = true;
+  services.gpg-agent.enable = pkgs.stdenv.isLinux;
 }

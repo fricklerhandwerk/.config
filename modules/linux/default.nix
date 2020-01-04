@@ -1,4 +1,3 @@
-# configuration for linux machines
 { pkgs, ... }:
 {
   imports = [
@@ -8,8 +7,7 @@
   # auto-mount external storage
   services.udiskie.enable = true;
   home.packages = with pkgs; [
+    udiskie # manually manage external storage
     acpi
-    # manually manage external storage if needed
-    udiskie
   ];
 }

@@ -1,4 +1,3 @@
-# configuration for linux machines with graphical user interface
 { pkgs, ... }:
 {
   imports = [
