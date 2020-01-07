@@ -4,11 +4,15 @@
     enable = true;
     matchBlocks = {
       github = {
-        host = "github.com";
+        hostname = "github.com";
         identityFile = "${config.home.homeDirectory}/.ssh/github";
       };
       fricklerhandwerk = {
-        host = "fricklerhandwerk.de";
+        hostname = "fricklerhandwerk.de";
+        identityFile = "${config.home.homeDirectory}/.ssh/una";
+      };
+      rip = {
+        hostname = "89.144.19.17";
         identityFile = "${config.home.homeDirectory}/.ssh/una";
       };
     };
