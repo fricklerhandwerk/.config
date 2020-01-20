@@ -59,7 +59,7 @@ in
           set -e
           for f in ${concatStringsSep " " (map (f: "${mount}/ssh/${f}*") keys)}
           do
-            install -D -m600 "$f" $HOME/.ssh/
+            install -D -m600 "$f" $HOME/.ssh
           done
         ''; in "${script}/bin/import-ssh-keys";
     };
