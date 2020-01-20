@@ -19,4 +19,6 @@
     enable = true;
     lockCmd = "${pkgs.xsecurelock}/bin/xsecurelock";
   };
+  # auto-mount external storage
+  services.udiskie.enable = true;
 }
