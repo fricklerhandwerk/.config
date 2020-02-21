@@ -43,6 +43,7 @@
         vim-airline-themes
         unstable.NeoSolarized
         LanguageClient-neovim
+        vim-go
       ];
   };
   home.packages = with pkgs; [
@@ -51,5 +52,7 @@
        ps.pyls-isort
        ps.pyls-black
     ]))
+    gotools
+    go
   ];
 }

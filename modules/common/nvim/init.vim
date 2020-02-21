@@ -127,7 +127,10 @@ inoremap <expr><tab> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><s-tab> pumvisible() ? "\<C-p>" : "\<TAB>"
 
 " IDE
-let g:LanguageClient_serverCommands = { 'python': ['pyls'] }
+let g:LanguageClient_serverCommands = {
+\  'python': ['pyls'],
+\  'go': ['gopls'],
+\ }
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
@@ -137,6 +140,13 @@ nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 nnoremap <silent> gf :call LanguageClient_textDocument_formatting()<CR>
+
+" also run `goimports` when formatting in `vim-go`
+let g:go_fmt_command = "goimports"
+
+" format on file save, workaround for
+" <https://github.com/fatih/vim-go/issues/2471>
+autocmd BufWritePre,FileWritePre *.go :GoFmt
 
 " go back
 nnoremap gb <C-o>
