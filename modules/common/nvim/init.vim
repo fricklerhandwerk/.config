@@ -132,6 +132,8 @@ let g:LanguageClient_serverCommands = {
 \  'go': ['gopls'],
 \ }
 
+let g:LanguageClient_diagnosticsList = "Disabled"
+
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> gh :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
@@ -147,6 +149,7 @@ let g:go_fmt_command = "goimports"
 " format on file save, workaround for
 " <https://github.com/fatih/vim-go/issues/2471>
 autocmd BufWritePre,FileWritePre *.go :GoFmt
+autocmd BufWritePre,FileWritePre *.go :GoMetaLinter
 
 " go back
 nnoremap gb <C-o>

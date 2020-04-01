@@ -54,5 +54,6 @@
     ]))
     gotools
     go
+    golangci-lint
   ];
 }
