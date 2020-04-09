@@ -3,11 +3,11 @@
   programs.ssh = {
     enable = true;
     matchBlocks = {
-      github = {
+      "github github.com" = {
         hostname = "github.com";
         identityFile = "${config.home.homeDirectory}/.ssh/github";
       };
-      fricklerhandwerk = {
+      "fricklerhandwerk fricklerhandwerk.de" = {
         hostname = "fricklerhandwerk.de";
         identityFile = "${config.home.homeDirectory}/.ssh/una";
       };
