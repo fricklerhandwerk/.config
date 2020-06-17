@@ -22,7 +22,7 @@ function mount
     exit
   end
 
-  set volumes (string join \n $afpcmd | tail -2 | head -1 | cut -d: -f2 | tr -d " " | tr , \n)
+  set volumes (string join \n $afpcmd | tail -2 | head -1 | cut -d: -f2 | tr , \n | sed -e 's/ *$//' -e 's/^ *//')
 
   for vol in $volumes
     set -l mount $HOME/$server/$vol
