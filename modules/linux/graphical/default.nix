@@ -4,6 +4,7 @@
     ../.
     ./dunst.nix
     ./xmonad.nix
+    ./wine.nix
   ];
 
   home.packages = with pkgs;
