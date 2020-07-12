@@ -11,8 +11,9 @@
         hostname = "fricklerhandwerk.de";
         identityFile = "${config.home.homeDirectory}/.ssh/una";
       };
-      rip = {
-        hostname = "89.144.19.17";
+      webgo = {
+        user = "web196";
+        hostname = "server18.webgo24.de";
         identityFile = "${config.home.homeDirectory}/.ssh/una";
       };
     };
