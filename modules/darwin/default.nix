@@ -2,6 +2,7 @@
 {
   imports = [
     ../terminal
+    ./fix-time-machine.nix
   ];
 
   home.packages = with pkgs; [
