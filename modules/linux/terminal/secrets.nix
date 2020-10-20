@@ -100,7 +100,7 @@ in
           set -e
           for key in ${concatStringsSep " " keys}
           do
-            gpg --batch --import ${mount}/gpg/$key.asc
+            gpg --batch --import ${mount}/gpg/$key.{pub,sec}
           done
         ''; in "${script}/bin/import-gpg-keys";
     };
