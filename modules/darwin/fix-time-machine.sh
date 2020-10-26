@@ -44,7 +44,7 @@ echo "Fixing Properties"
 sed -i \
   -e '/RecoveryBackupDeclinedDate/{N;d;}' \
   -e '/VerificationState/{n;s/2/0/;}'     \
-  "$plist.backup"
+  "$plist"
 
 echo "Unmounting volumes"
 hdiutil detach "$disk"
