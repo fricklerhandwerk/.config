@@ -1,10 +1,6 @@
 { ... }:
 let
-  src = fetchGit {
-    name = "nixpkgs-unstable";
-    url = "https://github.com/NixOS/nixpkgs-channels";
-    ref = "nixpkgs-unstable";
-  };
+  src = fetchTarball "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz";
   overlay = self: super: {
     unstable = super.callPackage src { config = super.config; };
   };
