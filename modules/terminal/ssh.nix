@@ -16,6 +16,10 @@
         hostname = "server18.webgo24.de";
         identityFile = "${config.home.homeDirectory}/.ssh/una";
       };
+      ghost = {
+        hostname = "89.144.19.124";
+        identityFile = "${config.home.homeDirectory}/.ssh/ghost";
+      };
     };
     extraConfig = ''
       AddKeysToAgent yes
