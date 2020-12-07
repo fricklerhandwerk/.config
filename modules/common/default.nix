@@ -15,6 +15,7 @@
     ranger
     less
     coreutils
+    rsync
   ];
   home.sessionVariables = {
     EDITOR = "nvim";
