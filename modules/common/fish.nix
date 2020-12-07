@@ -3,6 +3,8 @@
   programs.fish = {
     enable = true;
     shellAbbrs = {
+      l = "ls -la --color=tty";
+      ll = "ls -lah --color=tty";
       gl = "git log";
       gsh = "git show";
       gst = "git status";
