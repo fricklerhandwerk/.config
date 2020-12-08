@@ -2,9 +2,12 @@
 {
   programs.fish = {
     enable = true;
-    shellAbbrs = {
+    shellAliases = {
       l = "ls -la --color=tty";
       ll = "ls -lah --color=tty";
+      ".." = "cd ..";
+    };
+    shellAbbrs = {
       gl = "git log";
       gsh = "git show";
       gst = "git status";
