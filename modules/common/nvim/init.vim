@@ -64,7 +64,7 @@ nmap <silent>H :set hls!<CR>
 
 " toggle invisible characters
 nmap <silent>L :set list!<CR>
-set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸\ ,eol:¬,space:·
 
 " fix movement on wrapped lines
 nnoremap j gj
@@ -119,6 +119,7 @@ map <Leader>h <Plug>(easymotion-linebackward)
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 " auto completion
 let g:deoplete#enable_at_startup = 1
+set completeopt=menu,noselect
 let g:UltiSnipsExpandTrigger='<c-space>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
 let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
