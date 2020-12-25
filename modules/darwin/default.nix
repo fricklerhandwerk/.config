@@ -3,6 +3,7 @@
   imports = [
     ../terminal
     ./fix-time-machine.nix
+    ./nixos-rebuild.nix
   ];
 
   home.packages = with pkgs; [
