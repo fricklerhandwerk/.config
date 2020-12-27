@@ -3,13 +3,13 @@
   imports = [
     ../terminal
     ./fix-time-machine.nix
-    ./nixos-rebuild.nix
   ];
 
   home.packages = with pkgs; [
     # TODO: set up proper configuration
     kitty
     umlet
+    (pkgs.callPackage ./nixos-rebuild.nix {})
   ];
 
   programs.fish = {
