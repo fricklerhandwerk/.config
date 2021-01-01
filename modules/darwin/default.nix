@@ -5,6 +5,9 @@
     ./fix-time-machine.nix
   ];
 
+  nixpkgs.config = import ./nixpkgs-config.nix;
+  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+
   home.packages = with pkgs; [
     # TODO: set up proper configuration
     kitty
