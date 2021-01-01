@@ -25,6 +25,11 @@ in
         hostname = "89.144.19.124";
         identityFile = "${ssh}/ghost";
       };
+      rip = {
+        forwardAgent = true;
+        hostname = "85.93.16.234";
+        identityFile = "${ssh}/rip";
+      };
     };
     extraConfig = ''
       AddKeysToAgent yes
