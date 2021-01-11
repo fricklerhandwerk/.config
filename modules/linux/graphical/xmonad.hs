@@ -8,10 +8,10 @@ import XMonad.Util.Run(spawnPipe)
 import System.IO
 
 main = do
-  spawn statusBar
+  spawn Main.statusBar
   xmonad $ docks defaultConfig
     { modMask = super
-    , terminal = terminal
+    , XMonad.terminal = Main.terminal
     , borderWidth = 3
     , focusFollowsMouse = False
     , layoutHook = smartBorders $ avoidStruts $ layoutHook defaultConfig
@@ -20,7 +20,7 @@ main = do
     ] `additionalKeys`
     [ ((super, xK_Return), spawn "$(yeganesh -x)")
     , ((super, xK_b), sendMessage ToggleStruts)
-    , ((super, xK_r), spawn format "pkill {0}; xmonad --restart" [statusBar])
+    , ((super, xK_r), spawn (format "pkill {0}; xmonad --restart" [Main.statusBar]))
     ]
 
 super = mod4Mask
