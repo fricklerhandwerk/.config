@@ -7,6 +7,7 @@
 
   machine = ./.;
 
+  xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
   nixpkgs.config.allowUnfree = true;
 
   home.packages = with pkgs; [

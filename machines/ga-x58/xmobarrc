@@ -1,0 +1,42 @@
+Config
+  { font = "xft:UbuntuMono:size=11,Font Awesome 5 Free:style=Solid:size=9"
+  -- correct for vertically off-center bar characters
+  , additionalFonts = ["xft:Font Awesome 5:size=11"], textOffsets = [17]
+  , bgColor = "#404040"
+  , position = TopSize C 100 28
+  , commands = [ Run DynNetwork [ "-t", "  <rx>  <tx>  "
+                                , "--suffix", "True"
+                                , "--width", "6"
+                                ] 10
+               , Run MultiCpu ["-t", " <fn=1><autobar> </fn><total>%", "--width", "3"
+                              , "--bfore", "▮"
+                              , "--bback", "▯"
+                              , "--bwidth", "5"
+                              , "--padchars", " 0"
+                              ] 10
+               , Run Memory ["-t"," <fn=1><usedbar></fn> <used>M/<total>M"
+                            , "--bfore", "▮"
+                            , "--bback", "▯"
+                            , "--bwidth", "8"
+                            ] 10
+               , Run DiskU [("/", " <fn=1><usedbar></fn> <used>/<size>")]
+                           [ "--bfore", "▮"
+                           , "--bback", "▯"
+                           , "--bwidth", "11"
+                           ] 30
+               , Run DiskIO [("/", "<write>  <read> ")] ["--width", "4"] 5
+               , Run Swap ["-t"," <used>M"] 20
+               , Run Alsa "default" "Master" [ "-t", "<status><fn=1> <volumebar></fn>"
+                                             , "--bfore", "▮"
+                                             , "--bback", "▯"
+                                             , "--bwidth", "10"
+                                             , "--", "--on", "", "--off", "", "--onc", "white"]
+               , Run Date "%a. %Y-%m-%d %H:%M" "date" 20
+               -- this can be made even more sleek with icon patterns for different power stati
+               ]
+  , sepChar = "%"
+  , alignSep = "}{"
+  , template = " %multicpu% | %memory% %swap% | %disku% %diskio% |%dynnetwork% }\
+                \{ %alsa:default:Master% | %date% "
+  }
+

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   xsession = {
     enable = true;
@@ -27,5 +27,5 @@
     ubuntu_font_family
   ];
 
-  xdg.configFile."xmobar/xmobarrc".source = ./xmobarrc;
+  xdg.configFile."xmobar/xmobarrc".source = lib.mkDefault ./xmobarrc;
 }
