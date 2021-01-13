@@ -11,5 +11,7 @@
     # convenient interface to manually manage external storage
     udiskie
     acpi
+    cifs-utils
+    fuseiso
   ];
 }
