@@ -27,5 +27,13 @@
       gp = "git push";
       gco = "git checkout";
     };
+    interactiveShellInit = ''
+      function upload
+        rsync -a --partial --progress $argv webgo:www/fricklerhandwerk/temp/
+        for arg in $argv
+          echo https://fricklerhandwerk.de/temp/(basename $arg)
+        end
+      end
+    '';
   };
 }
