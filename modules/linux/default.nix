@@ -13,5 +13,6 @@
     acpi
     cifs-utils
     fuseiso
+    logmein-hamachi
   ];
 }
