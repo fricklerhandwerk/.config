@@ -4,9 +4,10 @@
     ./fish.nix
     ./git.nix
     ./machine.nix
+    ./nixops.nix
     ./nvim
-    ./zip.nix
     ./unstable.nix
+    ./zip.nix
   ];
 
   home.packages = with pkgs; [
