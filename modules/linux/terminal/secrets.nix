@@ -27,7 +27,7 @@ in
   systemd.user.services.import-ssh-keys = {
     Unit = {
       Description = "Import SSH keys";
-      Wants = [ "mount-secrets.service" ];
+      Requires = [ "mount-secrets.service" ];
       After = [ "mount-secrets.service" ];
     };
 
@@ -45,19 +45,9 @@ in
       Environment = concatStringsSep " " [
        "PATH=${lib.makeBinPath [ coreutils ]}"
       ];
-      ExecCondition = let script = writeShellScriptBin "check-ssh-keys" ''
-          for f in ${concatStringsSep " " (map (f: "$HOME/.ssh/${f}*") keys)}
-          do
-            if ! test -f "$f"
-            then
-              exit 0
-            fi
-          done
-          exit 1
-        ''; in "${script}/bin/check-ssh-keys";
       ExecStart = let script = writeShellScriptBin "import-ssh-keys" ''
           set -e
-          for f in ${concatStringsSep " " (map (f: "${mount}/ssh/${f}*") keys)}
+          for f in "${mount}"/ssh/*
           do
             install -D -m600 "$f" $HOME/.ssh
           done
@@ -68,7 +58,7 @@ in
   systemd.user.services.import-gpg-keys = {
     Unit = {
       Description = "Import GPG keys";
-      Wants = [ "mount-secrets.service" ];
+      Requires = [ "mount-secrets.service" ];
       After = [ "mount-secrets.service" ];
     };
 
@@ -76,31 +66,17 @@ in
       WantedBy = [ "default.target" ];
     };
 
-    Service = let
-      keys = [
-        "A36D00C0EFF2C3E1E0603429EA79BFF41C157B3F"
-      ];
-    in {
+    Service = {
       Type = "oneshot";
       Environment = concatStringsSep " " [
        "PATH=${lib.makeBinPath [ gnupg ]}"
        "GNUPGHOME=${env.GNUPGHOME}"
       ];
-      ExecCondition = let script = writeShellScriptBin "check-gpg-keys" ''
-          for key in ${concatStringsSep " " keys}
-          do
-            if ! gpg --list-secret-keys $key
-            then
-              exit 0
-            fi
-          done
-          exit 1
-        ''; in "${script}/bin/check-gpg-keys";
       ExecStart = let script = writeShellScriptBin "import-gpg-keys" ''
           set -e
-          for key in ${concatStringsSep " " keys}
+          for key in "${mount}"/gpg/*
           do
-            gpg --batch --import ${mount}/gpg/$key.{pub,sec}
+            gpg --batch --import "$key"
           done
         ''; in "${script}/bin/import-gpg-keys";
     };
