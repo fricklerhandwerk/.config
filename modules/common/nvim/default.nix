@@ -20,12 +20,12 @@
         };
       in
       [
-        unstable.vim-fish
+        vim-fish
         fugitive
         vim-nix
         vim-surround
         vim-repeat
-        unstable.lexima-vim
+        lexima-vim
         ctrlp-vim
         vim-abolish
         vim-better-whitespace
@@ -41,13 +41,13 @@
         vim-jinja
         vim-airline
         vim-airline-themes
-        unstable.NeoSolarized
+        NeoSolarized
         LanguageClient-neovim
         vim-go
       ];
   };
   home.packages = with pkgs; [
-    (python3.withPackages (ps: [
+    (unstable.python3.withPackages (ps: [
        ps.pyls-mypy
        ps.pyls-isort
        ps.pyls-black

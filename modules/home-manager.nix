@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {} }:
 with pkgs;
 let
-  version = "19.09";
+  version = "20.09";
   src = builtins.fetchGit {
     name = "home-manager-${version}";
     url = https://github.com/rycee/home-manager;
