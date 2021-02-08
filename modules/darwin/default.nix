@@ -1,12 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     ../terminal
     ./fix-time-machine.nix
   ];
 
-  nixpkgs.config = import ./nixpkgs-config.nix;
-  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+  nixpkgs.config = lib.mkForce (import ./nixpkgs-config.nix);
+  xdg.configFile."nixpkgs/config.nix".source = lib.mkForce ./nixpkgs-config.nix;
 
   home.packages = with pkgs; [
     # TODO: set up proper configuration
