@@ -7,6 +7,8 @@
 
   nixpkgs.config = lib.mkForce (import ./nixpkgs-config.nix);
   xdg.configFile."nixpkgs/config.nix".source = lib.mkForce ./nixpkgs-config.nix;
+  # use `homebrew` for stuff that is not managed by `nix`
+  home.sessionPath = [ "/usr/local/bin" ];
 
   home.packages = with pkgs; [
     # TODO: set up proper configuration
@@ -27,7 +29,7 @@
       # available there.
       set -p fish_function_path ${pkgs.fish-foreign-env}/share/fish-foreign-env/functions
       fenv source ~/.nix-profile/etc/profile.d/nix.sh
-set -e fish_function_path[1]
+      set -e fish_function_path[1]
     '';
   };
 }
