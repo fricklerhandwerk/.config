@@ -7,8 +7,12 @@
 
   nixpkgs.config = lib.mkForce (import ./nixpkgs-config.nix);
   xdg.configFile."nixpkgs/config.nix".source = lib.mkForce ./nixpkgs-config.nix;
-  # use `homebrew` for stuff that is not managed by `nix`
-  home.sessionPath = [ "/usr/local/bin" ];
+  home.sessionPath = [
+    # use wine from graphical installer
+    "/Applications/Wine.app/Contents/Resources/wine/bin"
+    # use `homebrew` for stuff that is not managed by `nix`
+    "/usr/local/bin"
+  ];
 
   home.packages = with pkgs; [
     # TODO: set up proper configuration
