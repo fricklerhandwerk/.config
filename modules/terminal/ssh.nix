@@ -18,7 +18,7 @@ in
       webgo = {
         user = "web196";
         hostname = "server18.webgo24.de";
-        identityFile = "${ssh}/una";
+        identityFile = "${ssh}/webgo";
       };
       ghost = {
         forwardAgent = true;
