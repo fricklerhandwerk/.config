@@ -18,6 +18,14 @@
             ref = "master";
           };
         };
+        vim-pdf = vimUtils.buildVimPlugin {
+          pname = "vim-pdf";
+          version = "2017-05-21";
+          src = fetchGit {
+            url = "https://github.com/makerj/vim-pdf";
+            ref = "master";
+          };
+        };
       in
       [
         vim-fish
@@ -56,5 +64,9 @@
     gotools
     go
     golangci-lint
+    xpdf
   ];
+  nixpkgs.config = {
+    permittedInsecurePackages = [ "xpdf-4.02" ];
+  };
 }
