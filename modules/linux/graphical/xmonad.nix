@@ -15,11 +15,12 @@
     '';
   };
 
+  imports = [ ../../common/kitty.nix ];
+
   home.packages = with pkgs;
   let
     haskell = haskellPackages;
   in [
-    kitty
     dmenu
     haskell.yeganesh
     haskell.xmobar

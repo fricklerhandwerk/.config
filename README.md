@@ -37,7 +37,7 @@ Primary objective is to configure all my userspace software through `home-manage
 ## ideas for contributions
 
 - darwin packages: vlc, tor-browser-bundle-bin, qutebrowser, wineWow
-- home-manager: kitty, iterm2
+- home-manager: iterm2
 - nixpkgs: bump iterm2
 
 # prior art

@@ -2,6 +2,7 @@
 {
   imports = [
     ../terminal
+    ../common/kitty.nix
     ./fix-time-machine.nix
   ];
 
@@ -15,8 +16,6 @@
   ];
 
   home.packages = with pkgs; [
-    # TODO: set up proper configuration
-    kitty
     umlet
     (pkgs.callPackage ./nixos-rebuild.nix {})
   ];
