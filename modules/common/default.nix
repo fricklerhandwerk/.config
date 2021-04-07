@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
     ./fish.nix
@@ -11,15 +11,16 @@
   ];
 
   nixpkgs.config = import ./nixpkgs-config.nix;
-  xdg.configFile."nixpkgs/config.nix".source = ./nixpkgs-config.nix;
+  xdg.configFile."nixpkgs/config.nix".text = pkgs.lib.generators.toPretty {} config.nixpkgs.config;
 
   home.packages = with pkgs; [
-    ripgrep
-    fd
-    htop
-    ranger
-    less
     coreutils
+    fd
+    gnused
+    htop
+    less
+    ranger
+    ripgrep
     rsync
   ];
   home.sessionVariables = {

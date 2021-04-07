@@ -22,6 +22,7 @@
       [
         vim-fish
         fugitive
+        vim-pdf
         vim-nix
         vim-surround
         vim-repeat

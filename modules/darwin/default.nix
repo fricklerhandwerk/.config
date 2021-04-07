@@ -5,8 +5,8 @@
     ./fix-time-machine.nix
   ];
 
-  nixpkgs.config = lib.mkForce (import ./nixpkgs-config.nix);
-  xdg.configFile."nixpkgs/config.nix".source = lib.mkForce ./nixpkgs-config.nix;
+  nixpkgs.config = import ./nixpkgs-config.nix;
+
   home.sessionPath = [
     # use wine from graphical installer
     "/Applications/Wine.app/Contents/Resources/wine/bin"
