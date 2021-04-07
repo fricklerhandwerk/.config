@@ -15,6 +15,7 @@
     qutebrowser
     vlc
     tor-browser
+    unstable.discord
   ];
   services.screen-locker = {
     enable = true;
