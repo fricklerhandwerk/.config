@@ -22,6 +22,7 @@
     ranger
     ripgrep
     rsync
+    wget
   ];
   home.sessionVariables = {
     EDITOR = "nvim";
