@@ -5,7 +5,7 @@ with pkgs;
 with lib;
 let
   home-manager = writeShellScriptBin "home-manager" ''
-    exec ${callPackage ../home-manager.nix {}}/bin/home-manager -f ${toString config.machine} $@
+    exec ${callPackage ../overlays/home-manager.nix {}}/bin/home-manager -f ${toString config.machine} $@
   '';
 in
 {

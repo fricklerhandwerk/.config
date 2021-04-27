@@ -1,12 +1,11 @@
 { config, pkgs, ... }:
 {
   imports = [
+    ../../modules/machine.nix
+    ../../overlays
     ./fish.nix
     ./git.nix
-    ./machine.nix
-    ./nixops.nix
-    ./nvim
-    ./unstable.nix
+    ./nvim.nix
     ./zip.nix
   ];
 
@@ -19,10 +18,12 @@
     gnused
     htop
     less
+    nixops
     ranger
     ripgrep
     rsync
     wget
+    unstable.youtube-dl
   ];
   home.sessionVariables = {
     EDITOR = "nvim";

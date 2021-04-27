@@ -12,36 +12,17 @@ to set up its respective `home-manager` configuration.
 
 high-level goal is a portable user environment configuration that works across NixOS/Linux and macOS/Darwin and can be bootstrapped with one command. it does not depend on system properties and does not require `root` access.
 
-`./machines` contains entry points for each machine, which import configuration "profiles" and define machine-specific values. profiles vary over the kernel (`common`, `darwin`, `linux`) and which kind of user interface is available (`terminal`, `graphical`). somewhat confusingly `terminal` actually handles the case when there are `ssh`/`gpg` secrets present and adds/configures packages to make use of them. since every machine has a terminal, that part is covered by `./modules/common/` and `./modules/linux/default.nix`.
+- `./machines` contains entry points for each machine, which import configuration `./profiles` and define machine-specific values. 
 
-profiles are (again, somewhat confusingly) stored under `./modules` together with only a single actual `home-manager` module:
+- `./profiles` vary over the kernel (`common`, `darwin`, `linux`) and additional features such as `graphical` (only Linux) or `crypto`.
 
-[`./common/machine.nix`](https://github.com/fricklerhandwerk/.config/blob/master/modules/common/machine.nix) is a little hack to wire up the wrapper for `home-manager` installed in a given environment to automatically use the right configuration for that machine. It requires adding a `machine = ./.` to each entry point `./machines/<machine>/default.nix`.
+- `./modules` currently only has one entry [`machine.nix`](https://github.com/fricklerhandwerk/.config/blob/master/modules/machine.nix). this is a little hack to wire up the `home-manager` wrapper in a given environment to automatically use the right configuration for that machine. It requires adding a `machine = ./.` to each entry point `./machines/<machine>/default.nix`.
+
+- `./overlays` define package customizations and combine them in a global [overlay](https://nixos.org/manual/nixpkgs/stable/#chap-overlays).
 
 code reuse is achieved only through `imports`. tradeoff reasoning was to avoid the complexity of implementing [`home-manager` modules](https://rycee.gitlab.io/home-manager/index.html#ch-writing-modules) for every profile, and to minimize custom glue code and indrections to keep readability high. ideally the intention should be obvious from directory structure and explicit import relations. downside is duplication in directory names and more manual interaction for wiring everything up, which is both acceptable for currently few machines. thus most of the code is actual configuration and has very little functional overhead.
 
 ## ideas for the future
-
-
-- refactor directory structure for clarity
-
-  ```
-  .config
-  ├─ machines
-  │  ├─ x240
-       ...
-  │  └─ mbp2014
-  ├─ profiles
-  │  ├─ common # cross-platform terminal
-  │  │  └─ crypto
-  │  ├─ linux # linux-specific
-  │  │  ├─ default.nix # terminal
-  │  │  ├─ crypto
-  │  │  └─ graphical
-  │  └─ darwin # darwin-specific
-  ├─ modules # `home-manager` modules
-  └─ overlays # additional packages
-  ```
 
 - merge NixOS system and `home-manager` user environment configuration repositories
 

@@ -1,7 +1,8 @@
 { pkgs, lib, ... }:
 {
   imports = [
-    ../terminal
+    ../common
+    ../common/crypto
     ../common/kitty.nix
     ./fix-time-machine.nix
   ];

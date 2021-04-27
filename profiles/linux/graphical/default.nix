@@ -4,17 +4,14 @@
     ../.
     ./dunst.nix
     ./xmonad.nix
-    ./wine.nix
   ];
 
-  home.packages = with pkgs;
-  let
-    tor-browser = unstable.tor-browser-bundle-bin.override
-      { mediaSupport = true; };
-  in [
+  home.packages = with pkgs; [
     qutebrowser
-    vlc
     tor-browser
+    vlc
+    wine
+    winetricks
     unstable.discord
   ];
   services.screen-locker = {

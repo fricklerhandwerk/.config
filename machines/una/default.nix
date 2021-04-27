@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../modules/linux/terminal
+    ../../profiles/linux
   ];
 
   machine = ./.;

@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../../modules/darwin
+    ../../profiles/darwin
   ];
 
   machine = ./.;

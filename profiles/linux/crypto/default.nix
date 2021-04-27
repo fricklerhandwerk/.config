@@ -1,8 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../.
-    ../../terminal
+    ../../common/crypto
     ./secrets.nix
     ./ssh-agent.nix
   ];

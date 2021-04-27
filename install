@@ -14,5 +14,5 @@ fi
 machine=$current/machines/$1
 
 nix-shell -E \
-"with import <nixpkgs> {}; mkShell { buildInputs = [ (callPackage $current/modules/home-manager.nix {}) ]; }" \
+"with import <nixpkgs> {}; mkShell { buildInputs = [ (callPackage $current/overlays/home-manager.nix {}) ]; }" \
 --run "home-manager -f $machine switch"
