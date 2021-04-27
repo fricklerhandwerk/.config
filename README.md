@@ -1,65 +1,103 @@
 # .config
 
-On a machine with `nix` run
+## installation
 
-  ./install <machine>
+on a machine with [`nix`](https://nixos.org/download.html) run
 
-to set up its respective home-manager configuration.
+    ./install <machine>
 
-# goals
+to set up its respective `home-manager` configuration.
 
-Primary objective is to configure all my userspace software through `home-manager` on both NixOS and macOS - replacing `homebrew`.
+## design ideas
 
-## PRs
+high-level goal is a portable user environment configuration that works across NixOS/Linux and macOS/Darwin and can be bootstrapped with one command. it does not depend on system properties and does not require `root` access.
 
-- git-remote-gcrypt: fail loudly on any error in `gitception_get`
-- home-manager: add systemd mount/automount
+`./machines` contains entry points for each machine, which import configuration "profiles" and define machine-specific values. profiles vary over the kernel (`common`, `darwin`, `linux`) and which kind of user interface is available (`terminal`, `graphical`). somewhat confusingly `terminal` actually handles the case when there are `ssh`/`gpg` secrets present and adds/configures packages to make use of them. since every machine has a terminal, that part is covered by `./modules/common/` and `./modules/linux/default.nix`.
 
-## to do
+profiles are (again, somewhat confusingly) stored under `./modules` together with only a single actual `home-manager` module:
 
-- pin nixpkgs version
-- continuous backup to network storage (and retrieval)
-- mail
-- lock all logged-in sessions for a user on lid close
-  - `phsylock` for terminal, `xsecurelock` for `X`
-- iPhone backup/sync
-- export `osxkeychain` passwords to `pass`
+[`./common/machine.nix`](https://github.com/fricklerhandwerk/.config/blob/master/modules/common/machine.nix) is a little hack to wire up the wrapper for `home-manager` installed in a given environment to automatically use the right configuration for that machine. It requires adding a `machine = ./.` to each entry point `./machines/<machine>/default.nix`.
 
-## nice to have
+code reuse is achieved only through `imports`. tradeoff reasoning was to avoid the complexity of implementing [`home-manager` modules](https://rycee.gitlab.io/home-manager/index.html#ch-writing-modules) for every profile, and to minimize custom glue code and indrections to keep readability high. ideally the intention should be obvious from directory structure and explicit import relations. downside is duplication in directory names and more manual interaction for wiring everything up, which is both acceptable for currently few machines. thus most of the code is actual configuration and has very little functional overhead.
 
-- custom xmobar icon pattern for battery status
-- restart xmobar on wakeup
-- custom greeter
-- switch user on lock screen
-- create minimal blog
-- create minimal game with graphics (try godot engine)
+## ideas for the future
 
-## ideas for contributions
 
-- darwin packages: vlc, tor-browser-bundle-bin, qutebrowser, wineWow
-- home-manager: iterm2
-- nixpkgs: bump iterm2
+- refactor directory structure for clarity
 
-# prior art
+  ```
+  .config
+  ├─ machines
+  │  ├─ x240
+       ...
+  │  └─ mbp2014
+  ├─ profiles
+  │  ├─ common # cross-platform terminal
+  │  │  └─ crypto
+  │  ├─ linux # linux-specific
+  │  │  ├─ default.nix # terminal
+  │  │  ├─ crypto
+  │  │  └─ graphical
+  │  └─ darwin # darwin-specific
+  ├─ modules # `home-manager` modules
+  └─ overlays # additional packages
+  ```
 
-so far served as the main reference on how to use nixos and home-manager:
-https://github.com/dustinlacewell/dotfiles
+- merge NixOS system and `home-manager` user environment configuration repositories
 
-also with interesting thoughts on git commit messages:
-https://github.com/yrashk/nix-config
-https://github.com/yrashk/nix-home
+  the advantage is to have everything in one place, and being able to pin `nixpkgs` for system and user configuration at the same time.
 
-ideas on a mouse-free life and general computer interface minimalism:
-https://github.com/noctuid/dotfiles
+  originally it was that way, but I split out the system configuration, as it was the easiest boundary for separating
 
-arguments against minimalism:
-http://xahlee.info/linux/why_tiling_window_manager_sucks.html
+  1. system and user configuration
+  2. publicly visible educational configuration and private information about other users.
 
-trying to do full hands-off deployment:
-https://github.com/balsoft/nixos-config
+  pinning did not happen to be a big problem so far: upgrading the NixOS release required manually re-building the user environment with a matching version of `home-manager`.
 
-https://elvishjerricco.github.io/2018/06/24/secure-declarative-key-management.html
-https://www.reddit.com/r/NixOS/comments/9aa08b/whats_your_configurationnix_like/e4xuwak/
+  managing part of the configuration parameters privately will add complexity and indirection! if the public part is not supposed to reveal the private part's structure, there needs to be a generic import of an opaque directory (e.g. `./private`), which in itself may be a `git` [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) pointing to an [encrypted](https://github.com/spwhitton/git-remote-gcrypt) repository. that submodule needs to figure out on its own which features are required for the current machine. using the module system is unavoidable in this case.
 
-installer image for encrypted partition:
-https://github.com/techhazard/nixos-iso
+- user environment: detect machine automatically
+
+  that would reduce boilerplate a little bit and remove the need to pass a parameter to the `./install` script.
+
+## prior art
+
+- well-documented, cross-platform setup:
+
+  https://github.com/rummik/nixos-config/
+
+  interesting idea: automatically pick configuration [based on hostname](https://github.com/rummik/nixos-config/blob/55023e003095a1affb26906c56ffb883803af354/nix/hostname.nix)
+
+- this served as the main reference on how to use NixOS and `home-manager`:
+
+  https://github.com/dustinlacewell/dotfiles
+
+- interesting thoughts on how to word `git` commit messages:
+
+  https://github.com/yrashk/nix-config
+
+  https://github.com/yrashk/nix-home
+
+- ideas on a mouse-free life and general computer interface minimalism:
+
+  https://github.com/noctuid/dotfiles
+
+- arguments against minimalism:
+
+  http://xahlee.info/linux/why_tiling_window_manager_sucks.html
+
+- an attempt at full hands-off deployment [before flakes](https://github.com/balsoft/nixos-config/tree/e5d5ef5cb9ee26d9c6a8d56ea0b8f7884b33644a), nowadays an intricate but well-maintained setup:
+
+  https://github.com/balsoft/nixos-config
+
+- high-level ideas on how to design a `nix` configuration:
+
+  https://www.reddit.com/r/NixOS/comments/9aa08b/whats_your_configurationnix_like/e4xuwak/
+
+- pulling NixOps deployment secrets from `pass`:
+
+  https://elvishjerricco.github.io/2018/06/24/secure-declarative-key-management.html
+
+- installer image for encrypted partition:
+
+  https://github.com/techhazard/nixos-iso
