@@ -35,7 +35,7 @@ in
         diff = "${diff} | ${less}";
       };
       push = {
-        default = "matching";
+        default = "current";
       };
       pull = {
         rebase = true;
