@@ -35,12 +35,7 @@ in
       WantedBy = [ "default.target" ];
     };
 
-    Service = let
-      keys = [
-        "github"
-        "una"
-      ];
-    in {
+    Service = {
       Type = "oneshot";
       Environment = concatStringsSep " " [
        "PATH=${lib.makeBinPath [ coreutils ]}"
