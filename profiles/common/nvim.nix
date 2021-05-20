@@ -54,18 +54,18 @@
         LanguageClient-neovim
         vim-go
       ];
+      extraPackages = with pkgs; [
+        (unstable.python3.withPackages (ps: [
+           ps.pyls-mypy
+           ps.pyls-isort
+           ps.pyls-black
+        ]))
+        gotools
+        go
+        golangci-lint
+        xpdf
+      ];
   };
-  home.packages = with pkgs; [
-    (unstable.python3.withPackages (ps: [
-       ps.pyls-mypy
-       ps.pyls-isort
-       ps.pyls-black
-    ]))
-    gotools
-    go
-    golangci-lint
-    xpdf
-  ];
   nixpkgs.config = {
     permittedInsecurePackages = [ "xpdf-4.02" ];
   };
