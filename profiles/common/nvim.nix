@@ -53,6 +53,7 @@
         NeoSolarized
         LanguageClient-neovim
         vim-go
+        vim-isort
       ];
       extraPackages = with pkgs; [
         (unstable.python3.withPackages (ps: [
