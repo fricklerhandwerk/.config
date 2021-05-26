@@ -6,6 +6,7 @@ in
 {
   programs.git = {
     enable = true;
+    lfs.enable = true;
     package = with pkgs; symlinkJoin {
       name = "git";
       paths = [ gitMinimal ];
