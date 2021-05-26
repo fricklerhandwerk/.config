@@ -8,6 +8,7 @@
 
   home.packages = with pkgs; [
     qutebrowser
+    qview
     tor-browser
     vlc
     wine
