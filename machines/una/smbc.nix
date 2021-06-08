@@ -18,6 +18,8 @@
       git add source/comics
       git commit -m "automatic update"
       git push origin master
+      script/verify.py
+      script/download.py
     '';
   in {
     Unit = { Description =  "update SMBC comics archive"; };
