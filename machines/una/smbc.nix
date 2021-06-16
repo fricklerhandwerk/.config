@@ -15,7 +15,7 @@
       git checkout master
       git pull origin master
       script/scrape.py
-      git add source/comics
+      git add _comics
       git commit -m "automatic update"
       git push origin master
       script/verify.py
