@@ -7,20 +7,7 @@
       url = "ssh://git@github.com/fricklerhandwerk/smbc";
       ref = "master";
     };
-    pyEnv = (import "${smbc}").pyEnv;
-    push-update = pkgs.writeShellScriptBin "push-update" ''
-      export PATH=${with pkgs; lib.makeBinPath [ pyEnv git openssh coreutils ]}:$PATH
-      set -e
-      today=$(date --rfc-3339 date)
-      git checkout master
-      git pull origin master
-      script/scrape.py
-      git add _comics
-      git commit -m "automatic update"
-      git push origin master
-      script/verify.py
-      script/download.py
-    '';
+    env = (import "${smbc}/scripts" { inherit pkgs; });
   in {
     Unit = { Description =  "update SMBC comics archive"; };
     Service = {
@@ -29,7 +16,7 @@
       ];
       # assumes this repository is already present here:
       WorkingDirectory = "%h/smbc";
-      ExecStart = "${push-update}/bin/push-update";
+      ExecStart = "${env}/bin/push-update";
     };
   };
   systemd.user.timers.smbc-update = {
